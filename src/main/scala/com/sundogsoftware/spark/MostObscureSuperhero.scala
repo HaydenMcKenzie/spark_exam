@@ -5,22 +5,20 @@ import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.{IntegerType, StringType, StructType}
 
-/** Find the superhero with the most co-appearances. */
-object MostPopularSuperheroDataset {
+object MostObscureSuperhero extends App {
 
   case class SuperHeroNames(id: Int, name: String)
   case class SuperHero(value: String)
- 
+
   /** Our main function where the action happens */
-  def main(args: Array[String]) {
-   
+
     // Set the log level to only print errors
     Logger.getLogger("org").setLevel(Level.ERROR)
 
     // Create a SparkSession using every core of the local machine
     val spark = SparkSession
       .builder
-      .appName("MostPopularSuperhero")
+      .appName("MostObscureSuperhero")
       .master("local[*]")
       .getOrCreate()
 
@@ -43,19 +41,17 @@ object MostPopularSuperheroDataset {
       .as[SuperHero]
 
     val connections = lines
-      .withColumn("id", split(col("value"), " ")(0)) // The doesnt have any rows. This creates a row call "id" and adds only the first element to it
-      .withColumn("connections", size(split(col("value"), " ")) - 1) // Makes another row, turns all into an array and minuses 1 from the total number
-      .groupBy("id").agg(sum("connections").alias("connections")) // Counts all elements in array corresponding to "id" column
+      .withColumn("id", split(col("value"), " ")(0))
+      .withColumn("connections", size(split(col("value"), " ")) - 1)
+      .groupBy("id").agg(sum("connections").alias("connections"))
 
-    val mostPopular = connections
-        .sort($"connections".desc) // sort by descending order
-        .first() // takes the first result
+    val minConnectionCount = connections.agg(min("connections")).first().getLong(0) // use first to make a single row, getLong(0) to get the only field and convert back to a Long value
 
-    val mostPopularName = names
-      .filter($"id" === mostPopular(0))
-      .select("name")
-      .first() // links the ID with the name of the mostPopular superhero
+    val minConnections = connections.filter($"connections" === minConnectionCount)
 
-    println(s"${mostPopularName(0)} is the most popular superhero with ${mostPopular(1)} co-appearances.")
-  }
+    val minConnectionsWithNames = minConnections.join(names, usingColumn = "id")
+
+    println(s"The following characters only have ${minConnectionCount} connections:")
+    minConnectionsWithNames.select("name").show()
+
 }
