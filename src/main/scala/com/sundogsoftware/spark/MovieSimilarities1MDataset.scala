@@ -30,8 +30,7 @@ object MovieSimilarities1MDataset {
       .agg(
         sum(col("xy")).alias("numerator"),
         (sqrt(sum(col("xx"))) * sqrt(sum(col("yy")))).alias("denominator"),
-        count(col("xy")).alias("numPairs")
-      )
+        count(col("xy")).alias("numPairs"))
 
     // Calculate score and select only needed columns (movie1, movie2, score, numPairs)
     import spark.implicits._
