@@ -1,47 +1,26 @@
 package com.nuvento.sparkexam.TestQuestionOne
 
-import org.scalatest.funsuite.AnyFunSuite
+import com.nuvento.sparkexam.utils.SQLFunctions._
+import com.nuvento.sparkexam.utils.BeforeTest._
+import com.nuvento.sparkexam.utils.Functions._
 import org.apache.spark.sql.{DataFrame, SparkSession}
+import org.scalatest.flatspec.AnyFlatSpec
 
-class TestingJoin extends AnyFunSuite {
-  val spark: SparkSession = SparkSession.builder()
-    .appName("YourSparkTest")
-    .master("local[2]")
-    .getOrCreate()
+class TestingJoin extends AnyFlatSpec {
+  val customerInfoDF: DataFrame = createDataFrameAndReadInData(sparkSessionSetUp(), "customer_data")
+  val accountInfoDF: DataFrame = createDataFrameAndReadInData(sparkSessionSetUp(), "account_data")
 
-  import DFCreationLogic._
+  val joinedInfoDf: DataFrame = joinDataFrames(customerInfoDF, accountInfoDF, "customerId")
+  val expectedDF: DataFrame = customerInfoDF.join(accountInfoDF, "customerId")
 
-  test("Test join operation on imported data") {
-    val customerInfoDF: DataFrame = createCustomerInfoDataFrame(spark)
-    val accountInfoDF: DataFrame = createAccountInfoDataFrame(spark)
-
-    val resultDF: DataFrame = JoinedLogic.joinDataFrames(customerInfoDF, accountInfoDF)
-
-    val expectedDF: DataFrame = customerInfoDF.join(accountInfoDF, "customerId")
-
-    // Collect rows from DataFrames
-    val resultRows = resultDF.collect()
-    val expectedRows = expectedDF.collect()
-
-    println("resultRows = " + resultRows.take(5).mkString(", "))
-    println("expectedRows = " + expectedRows.take(5).mkString(", "))
-
-    assert(resultRows.sameElements(expectedRows))
+  it should "match Schema" in {
+    assertDataFrameSchemaEquals(joinedInfoDf, expectedDF)
+  }
+  it should "match lengths" in {
+    assertDataFrameLengthEquals(joinedInfoDf, expectedDF)
+  }
+  it should "match sets" in {
+    assertDataFrameSetEquals(joinedInfoDf, expectedDF)
   }
 }
 
-object DFCreationLogic {
-  def createCustomerInfoDataFrame(spark: SparkSession): DataFrame = {
-    spark.read.option("header", "true").csv("./data/customer_data.csv")
-  }
-
-  def createAccountInfoDataFrame(spark: SparkSession): DataFrame = {
-    spark.read.option("header", "true").csv("./data/account_data.csv")
-  }
-}
-
-object JoinedLogic {
-  def joinDataFrames(customerInfoDF: DataFrame, accountInfoDF: DataFrame): DataFrame = {
-    customerInfoDF.join(accountInfoDF, "customerId")
-  }
-}
