@@ -2,7 +2,7 @@ package com.nuvento.sparkexam.utils
 
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
-object Functions {
+object TestingFunctions {
   def assertDataFrameSchemaEquals(expected: DataFrame, result: DataFrame): Unit = {
     // Testing Schema Matches
     assert(expected.schema == result.schema)

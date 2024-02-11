@@ -57,7 +57,7 @@ object QuestionOne extends App {
 
 
     val resultDS = jointwoDS(cd, ad)
-    resultDS.show()
+    resultDS.show(500)
 
 
     spark.stop()

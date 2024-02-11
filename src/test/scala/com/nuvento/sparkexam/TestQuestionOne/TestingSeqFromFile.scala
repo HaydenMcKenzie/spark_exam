@@ -2,7 +2,7 @@ package com.nuvento.sparkexam.TestQuestionOne
 
 import com.nuvento.sparkexam.utils.SQLFunctions._
 import com.nuvento.sparkexam.utils.BeforeTest._
-import com.nuvento.sparkexam.utils.Functions._
+import com.nuvento.sparkexam.utils.TestingFunctions._
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.scalatest.flatspec.AnyFlatSpec
 
