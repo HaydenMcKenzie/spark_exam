@@ -18,4 +18,10 @@ object SparkSetup extends App {
     .appName("SparkExam")
     .master("local[*]")
     .getOrCreate()
+
+  """
+  apolgize for lack of communication
+  I have talked to dad
+  I will commit to sending you daily updates
+  """
 }

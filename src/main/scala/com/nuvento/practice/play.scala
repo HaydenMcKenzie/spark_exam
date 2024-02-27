@@ -15,5 +15,8 @@ object play extends App {
   val parquetDF = SparkSetup.spark.read.parquet(parquetFilePath)
   val droppedParquet = parquetDF.drop("numberAccounts", "totalBalance", "averageBalance")
 
-  droppedParquet.show()
+  val joinedData = droppedParquet.join(transformData, "customerId")
+
+  joinedData.show()
+
 }
