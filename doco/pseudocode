@@ -1,0 +1,41 @@
+Setup
+    SET logger error
+    CREATE SparkSession
+
+    READ in files
+        CREATE customerData
+            from customer_data.csv
+        CREATE accountData
+            from account_data.csv
+
+Transform Data - Question 1
+    JOIN accountData to customerData by "customerId"
+
+    GROUPBY "customerId", "forename", "surname"
+        CREATE Seq of all accountsId with the same "customerId", "forename", "surname".
+            ALIAS column "accounts"
+        COUNT elements in Seq of "accountId".
+            ALIAS column "numberAccounts"
+        ADD all numbers from "balance" and round to 2 decimal places.
+            ALIAS column "totalBalance"
+        AVG all numbers from "balance" and round to 2 decimal places.
+            ALIAS column "averageBalance"
+
+WRITE TO FILE
+    Save as a Parquet file
+
+
+Transform Data - Question 2
+    READ Parguet file
+        from Question 1
+    READ addressData
+        from address_data.csv
+
+    REMOVE columns "numberAccounts", "totalBalance" and "averageBalance" from Parguet file
+    REMOVE column "addressId" from addressData
+        CREATE seq for address
+
+    JOIN addressData to Parguet file
+
+WRITE TO FILE
+    Save as a Parquet file

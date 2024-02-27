@@ -1,6 +1,6 @@
-package com.nuvento.sparkexam.utils
+package com.nuvento.sparkexam.TestQuestionOne.holding
 
-import org.apache.spark.sql.{DataFrame, SparkSession}
+import org.apache.spark.sql.DataFrame
 
 object TestingFunctions {
   def assertDataFrameSchemaEquals(expected: DataFrame, result: DataFrame): Unit = {

@@ -3,7 +3,7 @@ package com.nuvento.sparkexam.TestQuestionOne
 import org.apache.spark.sql.SparkSession
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.BeforeAndAfterAll
-import com.nuvento.sparkexam.play.loadCustomerData
+import com.nuvento.practice.playQ1.loadCustomerData
 
 
 

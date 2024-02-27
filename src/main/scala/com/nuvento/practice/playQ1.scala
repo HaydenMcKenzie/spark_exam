@@ -1,11 +1,10 @@
-package com.nuvento.sparkexam
+package com.nuvento.practice
 
-import org.apache.spark.sql._
 import org.apache.log4j._
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
 
-object play extends App {
+object playQ1 extends App {
 
   // customer_data.csv
   case class customerInfo(customerId: String, forename: String, surname: String)
@@ -43,11 +42,11 @@ object play extends App {
   // Code
   val joinedDF = cd.join(ad, "customerId")
 
-  val concatAccountsUDF = udf((accounts: Seq[String]) => accounts.mkString(", "))
+  val CconcatAccountsUDF = udf((accounts: Seq[String]) => accounts.mkString(", "))
 
   val aggregatedDF = joinedDF.groupBy("customerId", "forename", "surname")
     .agg(
-      concatAccountsUDF(collect_list("accountId")).alias("accounts"),
+      CconcatAccountsUDF(collect_list("accountId")).alias("accounts"),
       countDistinct("accountId").alias("numberAccounts"),
       concat(lit("$"), format_number(sum("balance"), 2)).alias("totalBalance"),
       concat(lit("$"), format_number(round(avg("balance"), 2), 2)).alias("averageBalance")
