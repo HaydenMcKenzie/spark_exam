@@ -1,38 +1,19 @@
 package com.nuvento.sparkexam.handlefiles
 
-import org.apache.spark.sql.{Dataset, SparkSession}
+import org.apache.spark.sql.{Dataset, Encoder, Encoders, SparkSession}
 import com.nuvento.sparkexam.utils.SparkSetup._
+import com.nuvento.sparkexam.handlefiles.schemas._
+import scala.reflect.ClassTag
 
 object ReadData extends App {
 
-  // customer_data.csv schema
-  case class customerInfo(customerId: String, forename: String, surname: String)
-
-  // account_data.csv schema
-  case class accountInfo(customerId: String, accountId: String, balance: Double)
-
   import spark.implicits._
 
-  def readCustomerData(): Dataset[customerInfo] = {
-    """
-      | @returns Dataset of customer_data.csv with customerInfo as a Schema
-      |""".stripMargin
+  def readFileData[T: Encoder : ClassTag](filePath: String): Dataset[T] = {
     spark.read
       .option("header", "true")
       .option("inferSchema", "true")
-      .csv("data/customer_data.csv")
-      .as[customerInfo]
+      .csv("data/" + filePath + ".csv")
+      .as[T]
   }
-
-  def readAccountData(): Dataset[accountInfo] = {
-    """
-      | @returns Dataset of account_data.csv with accountInfo as a Schema
-      |""".stripMargin
-    spark.read
-      .option("header", "true")
-      .option("inferSchema", "true")
-      .csv("data/account_data.csv")
-      .as[accountInfo]
-  }
-
 }
