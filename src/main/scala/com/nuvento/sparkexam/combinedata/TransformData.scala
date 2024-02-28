@@ -1,14 +1,13 @@
 package com.nuvento.sparkexam.combinedata
 
-import com.nuvento.sparkexam.QuestionTwo.removedColumns
 import com.nuvento.sparkexam.combinedata.JoinData.joinData
-import org.apache.spark.sql.{DataFrame, Dataset, SparkSession}
-import org.apache.spark.sql.functions.{collect_list, udf}
+import org.apache.spark.sql.{Dataset, SparkSession}
+import org.apache.spark.sql.functions.collect_list
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.{ArrayType, StringType}
 
 object TransformData extends App {
-  def aggregatedDataFrame(joinedDF: Dataset[_], spark: SparkSession): Dataset[_] = {
+  def aggregatedDataSet(joinedDF: Dataset[_], spark: SparkSession): Dataset[_] = {
     """
       | @param joinedDF: Dataframe from JoinData
       | @param spark: Access SparkSession for certain features needed
@@ -22,9 +21,6 @@ object TransformData extends App {
       | Averages all accounts balances to 2 decimal places. Renames column to averageBalance and puts $ at the front
       |""".stripMargin
   import spark.implicits._
-
-  //val concatAccountsUDF = udf((accounts: Seq[String]) => accounts.mkString(", "))
-  // Thought I needed it to be a string however I read the assignment wrong.
 
   joinedDF.groupBy("customerId", "forename", "surname")
     .agg(

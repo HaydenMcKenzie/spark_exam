@@ -1,6 +1,6 @@
 package com.nuvento.sparkexam.combinedata
 
-import org.apache.spark.sql.{DataFrame, Dataset, SparkSession}
+import org.apache.spark.sql.Dataset
 
 object JoinData extends App {
   """

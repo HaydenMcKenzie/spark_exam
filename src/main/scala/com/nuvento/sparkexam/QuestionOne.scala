@@ -3,7 +3,7 @@ package com.nuvento.sparkexam
 import com.nuvento.sparkexam.handlefiles.ReadData._
 import com.nuvento.sparkexam.utils.SparkSetup
 import com.nuvento.sparkexam.combinedata.JoinData.joinData
-import com.nuvento.sparkexam.combinedata.TransformData.aggregatedDataFrame
+import com.nuvento.sparkexam.combinedata.TransformData.aggregatedDataSet
 import com.nuvento.sparkexam.handlefiles.Schemas
 
 object QuestionOne extends App {
@@ -16,9 +16,9 @@ object QuestionOne extends App {
 
   // Transform Data
   val joinDS = joinData(customerData, accountData)
-  val aggregatedDF = aggregatedDataFrame(joinDS, SparkSetup.spark)
+  val aggregatedDF = aggregatedDataSet(joinDS, SparkSetup.spark)
 
-  // Write to file - need help
+  // Write to file
   aggregatedDF.show()
   aggregatedDF.printSchema()
 
