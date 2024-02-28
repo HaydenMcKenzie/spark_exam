@@ -11,8 +11,8 @@ object JoinData extends App {
     | Joins accountData to customerData via the "customerId" column
     |""".stripMargin
 
-  def joinDataSetsToDataFrame(customerData: Dataset[_], accountData: Dataset[_]): DataFrame = {
-    customerData.join(accountData, "customerId")
+  def joinData(firstData: Dataset[_], secondData: Dataset[_]): Dataset[_] = {
+    firstData.join(secondData, "customerId")
   }
 
 }

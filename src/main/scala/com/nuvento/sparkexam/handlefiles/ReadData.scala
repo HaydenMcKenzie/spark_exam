@@ -1,19 +1,28 @@
 package com.nuvento.sparkexam.handlefiles
 
-import org.apache.spark.sql.{Dataset, Encoder, Encoders, SparkSession}
-import com.nuvento.sparkexam.utils.SparkSetup._
-import com.nuvento.sparkexam.handlefiles.schemas._
+import org.apache.spark.sql.{DataFrame, Dataset, Encoder, Encoders, SparkSession}
+import com.nuvento.sparkexam.utils.SparkSetup
+import com.nuvento.sparkexam.handlefiles.Schemas._
+
 import scala.reflect.ClassTag
 
 object ReadData extends App {
 
-  import spark.implicits._
+  import SparkSetup.spark.implicits._
 
   def readFileData[T: Encoder : ClassTag](filePath: String): Dataset[T] = {
-    spark.read
+    SparkSetup.spark.read
       .option("header", "true")
       .option("inferSchema", "true")
       .csv("data/" + filePath + ".csv")
       .as[T]
   }
+
+  def readParquetFile(): DataFrame = {
+    val parquetFilePath = "src/main/scala/com/nuvento/sparkexam/output"
+    val parquetDF = SparkSetup.spark.read.parquet(parquetFilePath)
+
+    parquetDF
+  }
+
 }

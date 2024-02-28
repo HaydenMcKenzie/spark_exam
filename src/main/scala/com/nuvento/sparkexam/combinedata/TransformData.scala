@@ -1,11 +1,12 @@
 package com.nuvento.sparkexam.combinedata
 
-import org.apache.spark.sql.{DataFrame, SparkSession}
+import com.nuvento.sparkexam.combinedata.JoinData.joinData
+import org.apache.spark.sql.{DataFrame, Dataset, SparkSession}
 import org.apache.spark.sql.functions.{collect_list, udf}
 import org.apache.spark.sql.functions._
 
 object TransformData extends App {
-  def aggregatedDataFrame(joinedDF: DataFrame, spark: SparkSession): DataFrame = {
+  def aggregatedDataFrame(joinedDF: Dataset[_], spark: SparkSession): Dataset[_] = {
     """
       | @param joinedDF: Dataframe from JoinData
       | @param spark: Access SparkSession for certain features needed
@@ -20,15 +21,23 @@ object TransformData extends App {
       |""".stripMargin
   import spark.implicits._
 
-  val concatAccountsUDF = udf((accounts: Seq[String]) => accounts.mkString(", "))
+  //val concatAccountsUDF = udf((accounts: Seq[String]) => accounts.mkString(", "))
+  // Thought I needed it to be a string however I read the assignment wrong.
 
   joinedDF.groupBy("customerId", "forename", "surname")
     .agg(
-      concatAccountsUDF(collect_list("accountId")).alias("accounts"),
+      collect_list("accountId").alias("accounts"),
       countDistinct("accountId").alias("numberAccounts"),
       concat(lit("$"), format_number(sum("balance"), 2)).alias("totalBalance"),
       concat(lit("$"), format_number(round(avg("balance"), 2), 2)).alias("averageBalance")
     )
   }
 
+  def removeColumns(firstData: Dataset[_], secondData: Dataset[_]): Dataset[_] = {
+    val transformData = firstData.drop("addressId")
+    val droppedParquet = secondData.drop("numberAccounts", "totalBalance", "averageBalance")
+
+    val joinedData = joinData(droppedParquet,transformData)
+    joinedData
+  }
 }

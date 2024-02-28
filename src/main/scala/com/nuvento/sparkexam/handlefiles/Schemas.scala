@@ -2,8 +2,9 @@ package com.nuvento.sparkexam.handlefiles
 
 import org.apache.spark.sql.{Encoder, Encoders}
 import com.nuvento.sparkexam.utils.SparkSetup._
+import org.apache.spark.sql.types._
 
-object schemas extends App {
+object Schemas extends App {
   // customer_data.csv schema
   case class customerSchemaTestRun(customerId: String, forename: String, surname: String)
 
@@ -12,6 +13,7 @@ object schemas extends App {
 
   // address_data.csv schema
   case class addressSchema(addressId: String, customerId: String, address: String)
+
 
 
   implicit val customerSchemaEncoder: Encoder[customerSchemaTestRun] = Encoders.product[customerSchemaTestRun]
