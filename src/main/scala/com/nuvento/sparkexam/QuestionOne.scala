@@ -25,6 +25,7 @@ object QuestionOne extends App {
   try {
     val outputPath = "src/main/scala/com/nuvento/sparkexam/output"
     aggregatedDF.coalesce(1).write.parquet(outputPath)
+    println("File has been created")
   } catch {
     case e: Exception => println(s"File Already Exists")
   }

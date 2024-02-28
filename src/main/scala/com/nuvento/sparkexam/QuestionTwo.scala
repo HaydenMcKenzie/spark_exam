@@ -4,7 +4,9 @@ import com.nuvento.sparkexam.utils.SparkSetup
 import com.nuvento.sparkexam.handlefiles.ReadData._
 import com.nuvento.sparkexam.handlefiles.Schemas
 import com.nuvento.sparkexam.combinedata.JoinData._
-import com.nuvento.sparkexam.combinedata.TransformData.removeColumns
+import com.nuvento.sparkexam.combinedata.TransformData.{removeColumns, stringToSeq}
+import org.apache.spark.sql.functions._
+import org.apache.spark.sql.types.{ArrayType, StringType}
 
 object QuestionTwo extends App {
 
@@ -14,6 +16,8 @@ object QuestionTwo extends App {
 
   val removedColumns = removeColumns(readFileData[Schemas.addressSchema]("address_data"), readParquetFile())
 
-  removedColumns.show()
-  removedColumns.printSchema()
+  val transformedData = stringToSeq(removedColumns)
+
+  transformedData.show()
+  transformedData.printSchema()
 }

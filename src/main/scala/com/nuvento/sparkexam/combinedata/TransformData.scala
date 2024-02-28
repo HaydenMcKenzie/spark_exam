@@ -1,9 +1,11 @@
 package com.nuvento.sparkexam.combinedata
 
+import com.nuvento.sparkexam.QuestionTwo.removedColumns
 import com.nuvento.sparkexam.combinedata.JoinData.joinData
 import org.apache.spark.sql.{DataFrame, Dataset, SparkSession}
 import org.apache.spark.sql.functions.{collect_list, udf}
 import org.apache.spark.sql.functions._
+import org.apache.spark.sql.types.{ArrayType, StringType}
 
 object TransformData extends App {
   def aggregatedDataFrame(joinedDF: Dataset[_], spark: SparkSession): Dataset[_] = {
@@ -39,5 +41,10 @@ object TransformData extends App {
 
     val joinedData = joinData(droppedParquet,transformData)
     joinedData
+  }
+
+  def stringToSeq(data: Dataset[_]): Dataset[_] = {
+    data.withColumn("address", split(col("address"), ",").cast(ArrayType(StringType)))
+      .withColumn("address", expr("transform(address, x -> trim(x))"))
   }
 }
