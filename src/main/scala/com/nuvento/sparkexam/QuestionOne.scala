@@ -11,7 +11,7 @@ object QuestionOne extends App {
   SparkSetup.main(Array.empty[String])
   import SparkSetup.spark.implicits._
 
-  val customerData = readFileData[Schemas.customerSchemaTestRun]("customer_data")
+  val customerData = readFileData[Schemas.customerSchema]("customer_data")
   val accountData  = readFileData[Schemas.accountSchema]("account_data")
 
   // Transform Data

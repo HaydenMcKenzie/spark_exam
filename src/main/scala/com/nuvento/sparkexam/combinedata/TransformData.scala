@@ -31,7 +31,7 @@ object TransformData extends App {
     )
   }
 
-  def removeColumns(firstData: Dataset[_], secondData: Dataset[_]): Dataset[_] = {
+  def removeColumnsAndMergeIntoOneTable(firstData: Dataset[_], secondData: Dataset[_]): Dataset[_] = {
     val transformData = firstData.drop("addressId")
     val droppedParquet = secondData.drop("numberAccounts", "totalBalance", "averageBalance")
 

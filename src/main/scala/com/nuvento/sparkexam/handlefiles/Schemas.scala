@@ -6,7 +6,7 @@ import org.apache.spark.sql.types._
 
 object Schemas extends App {
   // customer_data.csv schema
-  case class customerSchemaTestRun(customerId: String, forename: String, surname: String)
+  case class customerSchema(customerId: String, forename: String, surname: String)
 
   // account_data.csv schema
   case class accountSchema(customerId: String, accountId: String, balance: Double)
@@ -16,7 +16,7 @@ object Schemas extends App {
 
 
 
-  implicit val customerSchemaEncoder: Encoder[customerSchemaTestRun] = Encoders.product[customerSchemaTestRun]
+  implicit val customerSchemaEncoder: Encoder[customerSchema] = Encoders.product[customerSchema]
   implicit val accountSchemaEncoder: Encoder[accountSchema] = Encoders.product[accountSchema]
   implicit val addressSchemaEncoder: Encoder[addressSchema] = Encoders.product[addressSchema]
 }

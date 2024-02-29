@@ -4,7 +4,7 @@ import com.nuvento.sparkexam.utils.SparkSetup
 import com.nuvento.sparkexam.handlefiles.ReadData._
 import com.nuvento.sparkexam.handlefiles.Schemas
 import com.nuvento.sparkexam.combinedata.JoinData._
-import com.nuvento.sparkexam.combinedata.TransformData.removeColumns
+import com.nuvento.sparkexam.combinedata.TransformData.removeColumnsAndMergeIntoOneTable
 
 object play extends App {
   SparkSetup.main(Array.empty[String])
@@ -16,7 +16,7 @@ object play extends App {
   val parquetDF = readParquetFile()
   val droppedParquet = parquetDF.drop("numberAccounts", "totalBalance", "averageBalance")
 
-  val removedColumns = removeColumns(transformData, droppedParquet)
+  val removedColumns = removeColumnsAndMergeIntoOneTable(transformData, droppedParquet)
 
   removedColumns.show()
 }

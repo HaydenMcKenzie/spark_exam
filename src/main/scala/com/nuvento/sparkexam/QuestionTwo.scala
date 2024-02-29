@@ -3,7 +3,7 @@ package com.nuvento.sparkexam
 import com.nuvento.sparkexam.utils.SparkSetup
 import com.nuvento.sparkexam.handlefiles.ReadData._
 import com.nuvento.sparkexam.handlefiles.Schemas
-import com.nuvento.sparkexam.combinedata.TransformData.{removeColumns, stringToSeq}
+import com.nuvento.sparkexam.combinedata.TransformData.{removeColumnsAndMergeIntoOneTable, stringToSeq}
 
 object QuestionTwo extends App {
   // Spark Setup
@@ -11,7 +11,7 @@ object QuestionTwo extends App {
   import SparkSetup.spark.implicits._
 
   // Transforming the Data
-  val removedColumns = removeColumns(readFileData[Schemas.addressSchema]("address_data"), readParquetFile())
+  val removedColumns = removeColumnsAndMergeIntoOneTable(readFileData[Schemas.addressSchema]("address_data"), readParquetFile())
   val transformedData = stringToSeq(removedColumns)
 
   // Printing
