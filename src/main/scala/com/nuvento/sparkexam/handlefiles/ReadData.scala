@@ -1,25 +1,33 @@
 package com.nuvento.sparkexam.handlefiles
 
-import org.apache.spark.sql.{DataFrame, Dataset, Encoder, Encoders, SparkSession}
+import org.apache.spark.sql.{DataFrame, Dataset, Encoder}
 import com.nuvento.sparkexam.utils.SparkSetup
-import com.nuvento.sparkexam.handlefiles.Schemas._
 
 import scala.reflect.ClassTag
 
 object ReadData extends App {
-
   import SparkSetup.spark.implicits._
 
-  def readFileData[T: Encoder : ClassTag](filePath: String): Dataset[T] = {
+  def readFileData[T: Encoder : ClassTag](fileName: String): Dataset[T] = {
+    """
+      | @param T: Takes a schema
+      | @param fileName: Takes a file name
+      | @returns: builds a DataSet and implements data from file with the specific schema
+      |""".stripMargin
+
     SparkSetup.spark.read
       .option("header", "true")
       .option("inferSchema", "true")
-      .csv("data/" + filePath + ".csv")
+      .csv("data/" + fileName + ".csv")
       .as[T]
   }
 
-  def readParquetFile(): DataFrame = {
-    val parquetFilePath = "src/main/scala/com/nuvento/sparkexam/output"
+  def readParquetFile(parquetFilePath: String): DataFrame = {
+    """
+      | @param parquetFilePath: takes file path for parquet folder which is "src/main/scala/com/nuvento/sparkexam/output"
+      | @returns: Parquet file that has been read into spark
+      |""".stripMargin
+
     val parquetDF = SparkSetup.spark.read.parquet(parquetFilePath)
 
     parquetDF

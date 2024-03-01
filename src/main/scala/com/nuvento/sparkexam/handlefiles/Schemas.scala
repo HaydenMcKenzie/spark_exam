@@ -1,10 +1,12 @@
 package com.nuvento.sparkexam.handlefiles
 
 import org.apache.spark.sql.{Encoder, Encoders}
-import com.nuvento.sparkexam.utils.SparkSetup._
-import org.apache.spark.sql.types._
 
 object Schemas extends App {
+  """
+    | List of all schemas that can be used to transform raw data from csv files to build Datasets
+    |""".stripMargin
+
   // customer_data.csv schema
   case class customerSchema(customerId: String, forename: String, surname: String)
 

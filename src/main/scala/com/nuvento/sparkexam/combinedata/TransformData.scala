@@ -1,6 +1,6 @@
 package com.nuvento.sparkexam.combinedata
 
-import com.nuvento.sparkexam.combinedata.JoinData.joinData
+import com.nuvento.sparkexam.utils.SparkSetup
 import org.apache.spark.sql.{Dataset, SparkSession}
 import org.apache.spark.sql.functions.collect_list
 import org.apache.spark.sql.functions._
@@ -11,6 +11,7 @@ object TransformData extends App {
     """
       | @param joinedDF: Dataframe from JoinData
       | @param spark: Access SparkSession for certain features needed
+      | @return: Returns new Dataset adding accounts, numberAccounts, totalBalance and averageBalance
       |
       | concatAcccuntUDF creates a template Seq for accounts
       |
@@ -31,16 +32,52 @@ object TransformData extends App {
     )
   }
 
-  def removeColumnsAndMergeIntoOneTable(firstData: Dataset[_], secondData: Dataset[_]): Dataset[_] = {
-    val transformData = firstData.drop("addressId")
-    val droppedParquet = secondData.drop("numberAccounts", "totalBalance", "averageBalance")
+  def removeColumns(firstData: Dataset[_], firstInput: String): Dataset[_] = {
+    """
+      | @param firstData: Takes Data Dataset
+      | @param firstInput: Input String for columns that need to removed
+      | @return: New Dataset with remaining columns
+      |""".stripMargin
 
-    val joinedData = joinData(droppedParquet,transformData)
-    joinedData
+    SparkSetup.main(Array.empty[String])
+    import SparkSetup.spark.implicits._
+
+    // Split input strings by comma and trim whitespace
+    val firstColumns = firstInput.split(",").map(_.trim)
+
+    // Select only the columns you want to keep
+    val selectedColumns = firstData.columns.filterNot(firstColumns.contains)
+    val transformedData = firstData.select(selectedColumns.head, selectedColumns.tail: _*)
+
+    transformedData
   }
 
   def stringToSeq(data: Dataset[_]): Dataset[_] = {
+    """
+      | @param data: Takes Data Dataset
+      | @returns: Address column is switched from a String type to ArrayType(StringType)
+      |""".stripMargin
+
     data.withColumn("address", split(col("address"), ",").cast(ArrayType(StringType)))
       .withColumn("address", expr("transform(address, x -> trim(x))"))
+  }
+
+  def removeColumnsAndMergeTwoSetsOfData(firstData: Dataset[_], firstInput: String, secondData: Dataset[_], secondInput: String): Dataset[_] = {
+    """
+      | @param firstData: Takes Data Dataset
+      | @param firstInput: Input String for columns that need to removed
+      | @param secondData: Takes Data Dataset
+      | @param secondInput: Input String for columns that need to removed
+      | @return: Returns new Data Dataset by merging firstData and secondData
+      |
+      | "Address" is switched from a String type to ArrayType(StringType)
+      |""".stripMargin
+
+    val removedColumnsForFirstData = removeColumns(firstData, firstInput)
+    val removedColumnsForSecondFile = removeColumns(secondData, secondInput)
+    val joinedColumnsThatHaventBeenRemoved = JoinData.joinData(removedColumnsForFirstData, removedColumnsForSecondFile, "customerId")
+    val transformAddressToSeq = stringToSeq(joinedColumnsThatHaventBeenRemoved)
+
+    transformAddressToSeq
   }
 }

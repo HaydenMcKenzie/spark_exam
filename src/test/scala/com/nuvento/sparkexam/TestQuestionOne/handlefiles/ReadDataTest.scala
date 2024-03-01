@@ -3,6 +3,7 @@ package com.nuvento.sparkexam.TestQuestionOne.handlefiles
 import com.nuvento.sparkexam.handlefiles.ReadData.readFileData
 import com.nuvento.sparkexam.handlefiles.Schemas
 import com.nuvento.sparkexam.utils.SparkSetup
+import org.apache.spark.sql.Dataset
 import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructType}
 import org.scalatest.BeforeAndAfter
 import org.scalatest.funsuite.AnyFunSuite
@@ -11,12 +12,13 @@ class JoinDataTest extends AnyFunSuite with BeforeAndAfter {
   SparkSetup.main(Array.empty[String])
   import SparkSetup.spark.implicits._
 
-  test("Test readFileData function on customer_data.csv must returns 500 lines of data") {
-    // Input Data
-    val testingData = readFileData[Schemas.customerSchema]("customer_data")
+  val testingCustomerData: Dataset[_] = readFileData[Schemas.customerSchema]("customer_data")
+  val testingAccountData: Dataset[_] = readFileData[Schemas.accountSchema]("account_data")
+  val testingAddressData: Dataset[_] = readFileData[Schemas.addressSchema]("address_data")
 
+  test("Test readFileData function on customer_data.csv must returns 500 lines of data") {
     // Call the function
-    val result = testingData.collect().length
+    val result = testingCustomerData.collect().length
 
     // Expected result
     val expected = 500
@@ -25,11 +27,8 @@ class JoinDataTest extends AnyFunSuite with BeforeAndAfter {
     assert(result == expected)
   }
   test("Test readFileData function customer_data.csv schema") {
-    // Input Data
-    val testingData = readFileData[Schemas.customerSchema]("customer_data")
-
     // Call the function
-    val result = testingData.schema
+    val result = testingCustomerData.schema
 
     // Expected result
     val expected = StructType(Seq(
@@ -44,11 +43,8 @@ class JoinDataTest extends AnyFunSuite with BeforeAndAfter {
 
 
   test("Test readFileData function on account_data.csv must returns 600 lines of data") {
-    // Input Data
-    val testingData = readFileData[Schemas.accountSchema]("account_data")
-
     // Call the function
-    val result = testingData.collect().length
+    val result = testingAccountData.collect().length
 
     // Expected result
     val expected = 600
@@ -57,11 +53,8 @@ class JoinDataTest extends AnyFunSuite with BeforeAndAfter {
     assert(result == expected)
   }
   test("Test readFileData function account_data.csv schema") {
-    // Input Data
-    val testingData = readFileData[Schemas.accountSchema]("account_data")
-
     // Call the function
-    val result = testingData.schema
+    val result = testingAccountData.schema
 
     // Expected result
     val expected = StructType(Seq(
@@ -76,11 +69,8 @@ class JoinDataTest extends AnyFunSuite with BeforeAndAfter {
 
 
   test("Test readFileData function on address_data.csv must returns 500 lines of data") {
-    // Input Data
-    val testingData = readFileData[Schemas.addressSchema]("address_data")
-
     // Call the function
-    val result = testingData.collect().length
+    val result = testingAddressData.collect().length
 
     // Expected result
     val expected = 500
@@ -89,11 +79,8 @@ class JoinDataTest extends AnyFunSuite with BeforeAndAfter {
     assert(result == expected)
   }
   test("Test readFileData function address_data.csv schema") {
-    // Input Data
-    val testingData = readFileData[Schemas.addressSchema]("address_data")
-
     // Call the function
-    val result = testingData.schema
+    val result = testingAddressData.schema
 
     // Expected result
     val expected = StructType(Seq(

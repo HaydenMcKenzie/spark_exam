@@ -4,7 +4,7 @@ import org.apache.log4j._
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
 
-object playQ1 extends App {
+object QuestionTwoPractice extends App {
 
   // customer_data.csv
   case class customerInfo(customerId: String, forename: String, surname: String)

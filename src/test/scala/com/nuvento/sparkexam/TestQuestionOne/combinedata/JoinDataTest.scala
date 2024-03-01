@@ -1,8 +1,8 @@
 import com.nuvento.sparkexam.combinedata.JoinData
 import com.nuvento.sparkexam.handlefiles.ReadData.readFileData
 import com.nuvento.sparkexam.handlefiles.Schemas
-import com.nuvento.sparkexam.handlefiles.Schemas.{accountSchema, customerSchema, addressSchema}
-import org.apache.spark.sql.{Dataset, SparkSession}
+import com.nuvento.sparkexam.handlefiles.Schemas.{accountSchema, customerSchema}
+import org.apache.spark.sql.Dataset
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.BeforeAndAfter
 import com.nuvento.sparkexam.utils._
@@ -21,7 +21,7 @@ class JoinDataTest extends AnyFunSuite with BeforeAndAfter {
     val secondTestingData: Dataset[accountSchema] = Seq(secondData).toDS()
 
     // Call the function
-    val result = JoinData.joinData(firstTestingData, secondTestingData)
+    val result = JoinData.joinData(firstTestingData, secondTestingData, "customerId")
 
     // Expected result
     val expected = Seq(("1", "Alice", "Smith", "ACC001", 100.0)).toDF("customerId", "forename", "surname", "accountId", "balance")
@@ -36,7 +36,7 @@ class JoinDataTest extends AnyFunSuite with BeforeAndAfter {
     val secondData = Seq((1, "Account1"), (2, "Account2"), (4, "Account4")).toDF("customerId", "accountName")
 
     // Call the function
-    val result = JoinData.joinData(firstData, secondData)
+    val result = JoinData.joinData(firstData, secondData, "customerId")
 
     // Expected result
     val expected = Seq((1, "Alice", "Account1"), (2, "Bob", "Account2")).toDF("customerId", "name", "accountName")
@@ -51,7 +51,7 @@ class JoinDataTest extends AnyFunSuite with BeforeAndAfter {
     val secondData = readFileData[Schemas.accountSchema]("account_data")
 
     // Call the function
-    val joinedData: Dataset[_] = JoinData.joinData(firstData, secondData)
+    val joinedData: Dataset[_] = JoinData.joinData(firstData, secondData, "customerId")
 
     // Expected value
     val expected = 545
@@ -66,7 +66,7 @@ class JoinDataTest extends AnyFunSuite with BeforeAndAfter {
     val secondData = readFileData[Schemas.accountSchema]("account_data")
 
     // Call the function
-    val joinedData: Dataset[_] = JoinData.joinData(firstData, secondData)
+    val joinedData: Dataset[_] = JoinData.joinData(firstData, secondData, "customerId")
     val actualSchema = joinedData.schema
 
     // Expected

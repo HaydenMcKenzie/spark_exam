@@ -8,7 +8,7 @@ object SparkSetup extends App {
   """
     | Logger is set to Level.ERROR to reduce error texts at compilation
     |
-    | Starting SparkSession on local device
+    | Creates SparkSession on local device
     |""".stripMargin
 
   Logger.getLogger("org").setLevel(Level.ERROR)
