@@ -8,7 +8,7 @@ import com.nuvento.sparkexam.handlefiles.Schemas.customerSchema
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.BeforeAndAfter
 import com.nuvento.sparkexam.utils._
-import org.apache.spark.sql.types.{ArrayType, LongType, StringType, StructField, StructType}
+import org.apache.spark.sql.types.{ArrayType, DoubleType, IntegerType, LongType, StringType, StructField, StructType}
 import org.apache.spark.sql.Dataset
 
 class TransformDataTest extends AnyFunSuite with BeforeAndAfter {
@@ -31,12 +31,12 @@ class TransformDataTest extends AnyFunSuite with BeforeAndAfter {
       ("3", "Charlie", "Johns"))
       .toDF("customerId", "forename", "surname")
     val secondData = Seq(
-      ("1", "Acc1", "10"),
-      ("1", "Acc2", "10"),
-      ("2", "Acc3", "13"),
-      ("2", "Acc4", "10"),
-      ("2", "Acc5", "10"),
-      ("3", "Acc6", "15"))
+      ("1", "Acc1", 10),
+      ("1", "Acc2", 10),
+      ("2", "Acc3", 13),
+      ("2", "Acc4", 10),
+      ("2", "Acc5", 10),
+      ("3", "Acc6", 15))
       .toDF("customerId", "accountId", "balance")
     val joiningFixedData = JoinData.joinData(firstData, secondData, "customerId")
 
@@ -45,9 +45,9 @@ class TransformDataTest extends AnyFunSuite with BeforeAndAfter {
 
     // Expected result
     val expected = Seq(
-      ("3", "Charlie", "Johns", Array("Acc6"),1, "$15.00", "$15.00"),
-      ("1", "Alice", "Smith", Array("Acc2", "Acc1"), 2, "$20.00", "$10.00"),
-      ("2", "Bob", "Munns", Array("Acc3", "Acc5", "Acc4"), 3, "$33.00", "$11.00"))
+      ("3", "Charlie", "Johns", Array("Acc6"),1, 15, 15.0),
+      ("1", "Alice", "Smith", Array("Acc2", "Acc1"), 2, 20, 10.0),
+      ("2", "Bob", "Munns", Array("Acc3", "Acc5", "Acc4"), 3, 33, 11.0))
       .toDF("customerId", "forename", "surname", "accounts", "numberAccounts", "totalBalance", "averageBalance")
 
     // Compare the result with the expected output
@@ -73,9 +73,9 @@ class TransformDataTest extends AnyFunSuite with BeforeAndAfter {
       StructField("forename", StringType, nullable = true),
       StructField("surname", StringType, nullable = true),
       StructField("accounts", ArrayType(StringType, false), nullable = true),
-      StructField("numberAccounts", LongType, nullable = false),
-      StructField("totalBalance", StringType, nullable = true),
-      StructField("averageBalance", StringType, nullable = true)
+      StructField("numberAccounts", IntegerType, nullable = false),
+      StructField("totalBalance", LongType, nullable = true),
+      StructField("averageBalance", DoubleType, nullable = true)
     ))
 
     // Compare the result with the expected output

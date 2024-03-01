@@ -4,7 +4,7 @@ import com.nuvento.sparkexam.utils.SparkSetup
 import org.apache.spark.sql.{Dataset, SparkSession}
 import org.apache.spark.sql.functions.collect_list
 import org.apache.spark.sql.functions._
-import org.apache.spark.sql.types.{ArrayType, StringType}
+import org.apache.spark.sql.types.{ArrayType, IntegerType, LongType, StringType}
 
 object TransformData extends App {
   def aggregatedDataSet(joinedDF: Dataset[_], spark: SparkSession): Dataset[_] = {
@@ -21,15 +21,15 @@ object TransformData extends App {
       | Adds all accounts balances to 2 decimal places. Renames column to totalBalance and puts $ at the front
       | Averages all accounts balances to 2 decimal places. Renames column to averageBalance and puts $ at the front
       |""".stripMargin
-  import spark.implicits._
+    import spark.implicits._
 
-  joinedDF.groupBy("customerId", "forename", "surname")
-    .agg(
-      collect_list("accountId").alias("accounts"),
-      countDistinct("accountId").alias("numberAccounts"),
-      concat(lit("$"), format_number(sum("balance"), 2)).alias("totalBalance"),
-      concat(lit("$"), format_number(round(avg("balance"), 2), 2)).alias("averageBalance")
-    )
+    joinedDF.groupBy("customerId", "forename", "surname")
+      .agg(
+        collect_list("accountId").alias("accounts"),
+        countDistinct("accountId").cast(IntegerType).alias("numberAccounts"),
+        sum("balance").cast(LongType).alias("totalBalance"),  // does it need to be rounded?
+        round(avg("balance"), 2).alias("averageBalance")
+      )
   }
 
   def removeColumns(firstData: Dataset[_], firstInput: String): Dataset[_] = {
@@ -52,21 +52,21 @@ object TransformData extends App {
     transformedData
   }
 
-  def stringToSeq(data: Dataset[_]): Dataset[_] = {
+  def stringToSeq(data: Dataset[_], column: String): Dataset[_] = {
     """
       | @param data: Takes Data Dataset
       | @returns: Address column is switched from a String type to ArrayType(StringType)
       |""".stripMargin
 
-    data.withColumn("address", split(col("address"), ",").cast(ArrayType(StringType)))
-      .withColumn("address", expr("transform(address, x -> trim(x))"))
+    data.withColumn(column, split(col(column), ",").cast(ArrayType(StringType)))
+      .withColumn(column, expr("transform("+column+", x -> trim(x))"))
   }
 
   def removeColumnsAndMergeTwoSetsOfData(firstData: Dataset[_], firstInput: String, secondData: Dataset[_], secondInput: String): Dataset[_] = {
     """
-      | @param firstData: Takes Data Dataset
+      | @param firstData: Takes Data file as a Dataset
       | @param firstInput: Input String for columns that need to removed
-      | @param secondData: Takes Data Dataset
+      | @param secondData: Takes Data file as a Dataset
       | @param secondInput: Input String for columns that need to removed
       | @return: Returns new Data Dataset by merging firstData and secondData
       |
@@ -76,7 +76,7 @@ object TransformData extends App {
     val removedColumnsForFirstData = removeColumns(firstData, firstInput)
     val removedColumnsForSecondFile = removeColumns(secondData, secondInput)
     val joinedColumnsThatHaventBeenRemoved = JoinData.joinData(removedColumnsForFirstData, removedColumnsForSecondFile, "customerId")
-    val transformAddressToSeq = stringToSeq(joinedColumnsThatHaventBeenRemoved)
+    val transformAddressToSeq = stringToSeq(joinedColumnsThatHaventBeenRemoved, "address")
 
     transformAddressToSeq
   }
