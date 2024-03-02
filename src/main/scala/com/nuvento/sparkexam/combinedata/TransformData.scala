@@ -1,19 +1,21 @@
 package com.nuvento.sparkexam.combinedata
 
-import com.nuvento.sparkexam.utils.SparkSetup
+import com.nuvento.sparkexam.SetUp
 import org.apache.spark.sql.{Dataset, SparkSession}
 import org.apache.spark.sql.functions.collect_list
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.{ArrayType, IntegerType, LongType, StringType}
 
 object TransformData extends App {
-  def aggregatedDataSet(joinedDF: Dataset[_], spark: SparkSession): Dataset[_] = {
+  SetUp.main(Array.empty[String])
+
+  // Question 1 Functions
+
+  def aggregatedDataSet(joinedData: Dataset[_], spark: SparkSession): Dataset[_] = {
     """
-      | @param joinedDF: Dataframe from JoinData
+      | @param joinedData: Joined Data from joinData() in question 1
       | @param spark: Access SparkSession for certain features needed
       | @return: Returns new Dataset adding accounts, numberAccounts, totalBalance and averageBalance
-      |
-      | concatAcccuntUDF creates a template Seq for accounts
       |
       | Groups by "customerId", "forename", "surname"
       | Collects all accountIds and puts them into a Seq. Renames column to accounts
@@ -23,7 +25,7 @@ object TransformData extends App {
       |""".stripMargin
     import spark.implicits._
 
-    joinedDF.groupBy("customerId", "forename", "surname")
+    joinedData.groupBy("customerId", "forename", "surname")
       .agg(
         collect_list("accountId").alias("accounts"),
         countDistinct("accountId").cast(IntegerType).alias("numberAccounts"),
@@ -32,15 +34,14 @@ object TransformData extends App {
       )
   }
 
+  // Question 2 Functions
+
   def removeColumns(firstData: Dataset[_], firstInput: String): Dataset[_] = {
     """
-      | @param firstData: Takes Data Dataset
+      | @param firstData: Takes Data file as a Dataset
       | @param firstInput: Input String for columns that need to removed
       | @return: New Dataset with remaining columns
       |""".stripMargin
-
-    SparkSetup.main(Array.empty[String])
-    import SparkSetup.spark.implicits._
 
     // Split input strings by comma and trim whitespace
     val firstColumns = firstInput.split(",").map(_.trim)
@@ -54,8 +55,9 @@ object TransformData extends App {
 
   def stringToSeq(data: Dataset[_], column: String): Dataset[_] = {
     """
-      | @param data: Takes Data Dataset
-      | @returns: Address column is switched from a String type to ArrayType(StringType)
+      | @param data: Takes Data file as a Dataset
+      | @param column: Takes a String input for column that needs to be changed to an ArrayType(StringType)
+      | @returns: Column is switched from a StringType to ArrayType(StringType)
       |""".stripMargin
 
     data.withColumn(column, split(col(column), ",").cast(ArrayType(StringType)))

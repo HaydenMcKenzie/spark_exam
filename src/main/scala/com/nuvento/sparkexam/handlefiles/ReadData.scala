@@ -1,12 +1,13 @@
 package com.nuvento.sparkexam.handlefiles
 
+import com.nuvento.sparkexam.SetUp
 import org.apache.spark.sql.{DataFrame, Dataset, Encoder}
 import com.nuvento.sparkexam.utils.SparkSetup
 
 import scala.reflect.ClassTag
 
 object ReadData extends App {
-  import SparkSetup.spark.implicits._
+  SetUp.main(Array.empty[String])
 
   def readFileData[T: Encoder : ClassTag](fileName: String): Dataset[T] = {
     """

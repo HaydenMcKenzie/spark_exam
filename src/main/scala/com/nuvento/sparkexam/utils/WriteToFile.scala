@@ -1,18 +1,17 @@
 package com.nuvento.sparkexam.utils
 
+import com.nuvento.sparkexam.SetUp
 import org.apache.spark.sql.Dataset
 
 object WriteToFile extends App {
+  SetUp.main(Array.empty[String])
 
   def writeToFile(aggregated: Dataset[_], outputPath: String): Unit = {
     """
-      | @param aggregated: Take Dataset
+      | @param aggregated: Take input Dataset
       | @param outputPath: String for file path
-      | @return: Write file or return "File Already Exists"
+      | @return: New file is created with "File has been created" or returns "File Already Exists" if file is already created
       |""".stripMargin
-
-    SparkSetup.main(Array.empty[String])
-    import SparkSetup.spark.implicits._
 
     try {
       aggregated.coalesce(1).write.parquet(outputPath)

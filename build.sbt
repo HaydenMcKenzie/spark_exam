@@ -1,4 +1,4 @@
-name := "SparkScalaCourse"
+name := "Spark Exam"
 
 version := "0.1"
 

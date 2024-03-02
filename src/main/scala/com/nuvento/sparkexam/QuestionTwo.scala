@@ -1,20 +1,15 @@
 package com.nuvento.sparkexam
 
-import com.nuvento.sparkexam.utils.SparkSetup
 import com.nuvento.sparkexam.handlefiles.ReadData._
-import com.nuvento.sparkexam.handlefiles.Schemas
 import com.nuvento.sparkexam.combinedata.TransformData.removeColumnsAndMergeTwoSetsOfData
+import com.nuvento.sparkexam.SetUp.{parquetFilePath, addressData}
 
 object QuestionTwo extends App {
   // Spark Setup
-  SparkSetup.main(Array.empty[String])
-  import SparkSetup.spark.implicits._
-
-  // file path
-  val parquetFilePath = "src/main/scala/com/nuvento/sparkexam/output"
+  SetUp.main(Array.empty[String])
 
   // Transforming the Data
-  val processData = removeColumnsAndMergeTwoSetsOfData(readParquetFile(parquetFilePath), "numberAccounts, totalBalance, averageBalance", readFileData[Schemas.addressSchema]("address_data"), "addressId")
+  val processData = removeColumnsAndMergeTwoSetsOfData(readParquetFile(parquetFilePath), "numberAccounts, totalBalance, averageBalance", addressData, "addressId")
 
   // Printing
   processData.show()
