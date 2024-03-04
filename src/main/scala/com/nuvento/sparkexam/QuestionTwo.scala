@@ -9,15 +9,19 @@ object QuestionTwo extends App {
   // Spark Setup
   SetUp.main(Array.empty[String])
 
-  // Transforming the Data
-  val parquetFile = readParquetFile(parquetFilePath)
+  try {
+    // Transforming the Data
+    val parquetFile = readParquetFile(parquetFilePath)
 
-  val removedColumnsForFirstData = removeColumns(parquetFile, "numberAccounts, totalBalance, averageBalance")
-  val removedColumnsForSecondFile = removeColumns(addressData, "addressId")
+    val removedColumnsForFirstData = removeColumns(parquetFile, "numberAccounts, totalBalance, averageBalance")
+    val removedColumnsForSecondFile = removeColumns(addressData, "addressId")
 
-  val joinedColumnsThatHaventBeenRemoved = JoinData.joinData(removedColumnsForFirstData, removedColumnsForSecondFile, "customerId")
-  val processData = stringToSeq(joinedColumnsThatHaventBeenRemoved, "address")
+    val joinedColumnsThatHaventBeenRemoved = JoinData.joinData(removedColumnsForFirstData, removedColumnsForSecondFile, "customerId")
+    val processData = stringToSeq(joinedColumnsThatHaventBeenRemoved, "address")
 
-  // Printing
-  processData.show()
+    // Printing
+    processData.show()
+  } catch {
+    case e: Exception => println(s"File Does Not Exists.")
+  }
 }
