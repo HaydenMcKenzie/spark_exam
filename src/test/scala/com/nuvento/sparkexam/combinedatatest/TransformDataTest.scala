@@ -1,14 +1,13 @@
 package com.nuvento.sparkexam.combinedatatest
 
-import com.nuvento.sparkexam.comebinedata.TransformData.{aggregatedDataSet, removeColumns, removeColumnsAndMergeTwoSetsOfData}
+import com.nuvento.sparkexam.comebinedata.TransformData.{aggregatedDataSet, removeColumns, stringToSeq}
 import com.nuvento.sparkexam.comebinedata.JoinData
-import com.nuvento.sparkexam.handlefiles.ReadData.{readFileData, readParquetFile}
+import com.nuvento.sparkexam.handlefiles.ReadData.readFileData
 import com.nuvento.sparkexam.handlefiles.Schemas
 import Schemas.customerSchema
 import com.nuvento.sparkexam.utils.SparkSetup
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.BeforeAndAfter
-import com.nuvento.sparkexam.utilstest._
 import org.apache.spark.sql.types.{ArrayType, DoubleType, IntegerType, LongType, StringType, StructField, StructType}
 import org.apache.spark.sql.Dataset
 
@@ -18,13 +17,14 @@ class TransformDataTest extends AnyFunSuite with BeforeAndAfter {
 
   // Local repeated data
   val parquetFilePath = "src/main/scala/com/nuvento/sparkexam/output"
-
-  val firstData: Dataset[_] = readFileData[Schemas.customerSchema]("customer_data")
-  val secondData: Dataset[_] = readFileData[Schemas.accountSchema]("account_data")
-  val thirdData: Dataset[_] = readFileData[Schemas.addressSchema]("address_data")
-  val joiningDataForCount: Dataset[_] = JoinData.joinData(firstData, secondData, "customerId")
-
   val testParquetFilePath = "src/test/scala/com/nuvento/sparkexam/outputtest"
+
+  val customerData: Dataset[_] = readFileData[Schemas.customerSchema]("customer_data")
+  val accountData: Dataset[_] = readFileData[Schemas.accountSchema]("account_data")
+  val addressData: Dataset[_] = readFileData[Schemas.addressSchema]("address_data")
+  val joiningDataForCount: Dataset[_] = JoinData.joinData(customerData, accountData, "customerId")
+
+
 
   // Testing aggrgatedDataSet function
   test("Test aggrgatedDataSet function with fixed data") {
@@ -88,11 +88,8 @@ class TransformDataTest extends AnyFunSuite with BeforeAndAfter {
 
   // Testing removeColumns function
   test("Test removeColumns function with one column input") {
-    // Sample input data
-    val testingData: Dataset[customerSchema] = readFileData[Schemas.customerSchema]("customer_data")
-
     // Call the function
-    val result: Dataset[_] = removeColumns(testingData, "customerId")
+    val result: Dataset[_] = removeColumns(customerData, "customerId")
     val resultSchema = result.schema
 
     // Expected
@@ -106,11 +103,8 @@ class TransformDataTest extends AnyFunSuite with BeforeAndAfter {
   }
 
   test("Test removeColumns function with multiple column input") {
-    // Sample input data
-    val testingData: Dataset[customerSchema] = readFileData[Schemas.customerSchema]("customer_data")
-
     // Call the function
-    val result: Dataset[_] = removeColumns(testingData, "customerId, surname")
+    val result: Dataset[_] = removeColumns(customerData, "customerId, surname")
     val resultSchema = result.schema
 
     // Expected
@@ -124,14 +118,11 @@ class TransformDataTest extends AnyFunSuite with BeforeAndAfter {
 
   // Testing stringtoSeq function
   test("Test stringtoSeq function turns address column from a string to an array") {
-    // Sample input data
-    val testingData = removeColumnsAndMergeTwoSetsOfData(readParquetFile(testParquetFilePath), "numberAccounts, totalBalance, averageBalance", thirdData, "addressId")
-
     // Call the function
-    val result: Dataset[_] = testingData.select("address")
+    val result = stringToSeq(customerData, "customerId").select("customerId")
 
     // Expected
-    val expectedSchema = StructType(Seq(StructField("address", ArrayType(StringType, true), nullable = true)))
+    val expectedSchema = StructType(Seq(StructField("customerId", ArrayType(StringType, true), nullable = true)))
 
     // Test if it is has more than 0
     assert(result.schema == expectedSchema)

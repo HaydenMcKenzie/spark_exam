@@ -62,24 +62,4 @@ object TransformData extends App {
     data.withColumn(column, split(col(column), ",").cast(ArrayType(StringType)))
       .withColumn(column, expr("transform("+column+", x -> trim(x))"))
   }
-
-  def removeColumnsAndMergeTwoSetsOfData(firstDataset: Dataset[_], firstStringInput: String, secondDataset: Dataset[_], secondStringInput: String): Dataset[_] = {
-    """
-      | @param firstDataset: Takes Data file as a Dataset -> Parquet file
-      | @param firstStringInput: Input String for columns that need to removed
-      | @param secondDataset: Takes Data file as a Dataset -> addressData
-      | @param secondStringInput: Input String for columns that need to removed
-      |
-      | @return: Returns new Data Dataset by merging firstDataset and secondDataset
-      |
-      | "Address" is switched from a String type to ArrayType(StringType) before return
-      |""".stripMargin
-
-    val removedColumnsForFirstData = removeColumns(firstDataset, firstStringInput)
-    val removedColumnsForSecondFile = removeColumns(secondDataset, secondStringInput)
-    val joinedColumnsThatHaventBeenRemoved = JoinData.joinData(removedColumnsForFirstData, removedColumnsForSecondFile, "customerId")
-    val transformAddressToSeq = stringToSeq(joinedColumnsThatHaventBeenRemoved, "address")
-
-    transformAddressToSeq
-  }
 }
