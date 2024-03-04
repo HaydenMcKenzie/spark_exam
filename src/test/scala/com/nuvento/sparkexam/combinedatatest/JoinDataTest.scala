@@ -8,7 +8,6 @@ import com.nuvento.sparkexam.utils.SparkSetup
 import org.apache.spark.sql.Dataset
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.BeforeAndAfter
-import com.nuvento.sparkexam.utilstest._
 import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructType}
 
 class JoinDataTest extends AnyFunSuite with BeforeAndAfter {

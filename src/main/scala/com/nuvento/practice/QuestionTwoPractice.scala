@@ -1,67 +1,22 @@
 package com.nuvento.practice
 
-import org.apache.log4j._
-import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.functions._
+import com.nuvento.sparkexam.comebinedata.JoinData
+import com.nuvento.sparkexam.handlefiles.ReadData._
+import com.nuvento.sparkexam.handlefiles.Schemas
+import com.nuvento.sparkexam.utils.SparkSetup
 
 object QuestionTwoPractice extends App {
+  SparkSetup.main(Array.empty[String])
+  import SparkSetup.spark.implicits._
+  val parquetFilePath = "src/main/scala/com/nuvento/sparkexam/output"
 
-  // customer_data.csv
-  case class customerInfo(customerId: String, forename: String, surname: String)
+  val importData = readFileData[Schemas.addressSchema]("address_data")
+  val transformData = importData.drop("addressId")
 
-  // account_data.csv
-  case class accountInfo(customerId: String, accountId: String, balance: Double)
+  val parquetDF = readParquetFile("src/main/scala/com/nuvento/sparkexam/output")
+  val droppedParquet = parquetDF.drop("numberAccounts", "totalBalance", "averageBalance")
 
-  // joined data
-  case class joinedAccount(customerId: String, forename: String, surname: String, accountId: String, balance: Double)
+  val processData = JoinData.joinData(droppedParquet, transformData, "customerId")
 
-
-  // Spark Setup
-  Logger.getLogger("org").setLevel(Level.ERROR)
-
-  val spark = SparkSession
-    .builder
-    .appName("Test")
-    .master("local[*]")
-    .getOrCreate()
-
-  import spark.implicits._
-  val cd = spark.read
-    .option("header", "true")
-    .option("inferSchema", "true")
-    .csv("data/customer_data.csv")
-    .as[customerInfo]
-
-  val ad = spark.read
-    .option("header", "true")
-    .option("inferSchema", "true")
-    .csv("data/account_data.csv")
-    .as[accountInfo]
-
-
-  // Code
-  val joinedDF = cd.join(ad, "customerId")
-
-  val CconcatAccountsUDF = udf((accounts: Seq[String]) => accounts.mkString(", "))
-
-  val aggregatedDF = joinedDF.groupBy("customerId", "forename", "surname")
-    .agg(
-      CconcatAccountsUDF(collect_list("accountId")).alias("accounts"),
-      countDistinct("accountId").alias("numberAccounts"),
-      concat(lit("$"), format_number(sum("balance"), 2)).alias("totalBalance"),
-      concat(lit("$"), format_number(round(avg("balance"), 2), 2)).alias("averageBalance")
-    )
-
-
-  spark.conf.set("spark.sql.repl.eagerEval.maxNumRows", 10)
-
-  aggregatedDF.show()
-
-  aggregatedDF.coalesce(1).write
-    .mode("overwrite")
-    .csv("src/main/scala/com/nuvento/sparkexam/CustomerAccountOutput")
-
-  spark.stop()
-
+  processData.show()
 }
-
