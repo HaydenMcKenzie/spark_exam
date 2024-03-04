@@ -1,8 +1,7 @@
 package com.nuvento.sparkexam
 
-import com.nuvento.sparkexam.utils.SparkSetup
-import com.nuvento.sparkexam.combinedata.JoinData.joinData
-import com.nuvento.sparkexam.combinedata.TransformData.aggregatedDataSet
+import com.nuvento.sparkexam.comebinedata.JoinData.joinData
+import com.nuvento.sparkexam.comebinedata.TransformData.aggregatedDataSet
 import com.nuvento.sparkexam.utils.WriteToFile.writeToFile
 
 import com.nuvento.sparkexam.SetUp.{customerData, accountData, parquetFilePath}
@@ -13,7 +12,7 @@ object QuestionOne extends App {
 
   // Transform Data
   val joinDataByCustomerId = joinData(customerData, accountData, "customerId")
-  val aggregated = aggregatedDataSet(joinDataByCustomerId, SparkSetup.spark)
+  val aggregated = aggregatedDataSet(joinDataByCustomerId)
 
   // Show and Write to file
   aggregated.show()

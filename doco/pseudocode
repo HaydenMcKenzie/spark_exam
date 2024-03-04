@@ -11,7 +11,6 @@ Setup
             from address_data.csv
 
 
-
 Transform Data - Question 1
     JOIN accountData to customerData by "customerId"
 
@@ -25,9 +24,9 @@ Transform Data - Question 1
         AVERAGE all numbers from "balance" and round to 2 decimal places.
             ALIAS column "averageBalance"
 
-WRITE TO FILE
-    Save as a Parquet file
-    SHOW new Dataset
+    WRITE TO FILE
+        Save as a Parquet file
+        SHOW new Dataset
 
 
 

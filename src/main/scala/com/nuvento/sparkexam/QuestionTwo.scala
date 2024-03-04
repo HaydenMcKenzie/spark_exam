@@ -1,7 +1,7 @@
 package com.nuvento.sparkexam
 
 import com.nuvento.sparkexam.handlefiles.ReadData._
-import com.nuvento.sparkexam.combinedata.TransformData.removeColumnsAndMergeTwoSetsOfData
+import com.nuvento.sparkexam.comebinedata.TransformData.removeColumnsAndMergeTwoSetsOfData
 import com.nuvento.sparkexam.SetUp.{parquetFilePath, addressData}
 
 object QuestionTwo extends App {
@@ -13,5 +13,4 @@ object QuestionTwo extends App {
 
   // Printing
   processData.show()
-  processData.printSchema()
 }

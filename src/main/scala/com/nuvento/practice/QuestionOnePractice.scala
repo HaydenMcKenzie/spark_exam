@@ -1,9 +1,9 @@
 package com.nuvento.practice
 
-import com.nuvento.sparkexam.combinedata.JoinData
-import com.nuvento.sparkexam.utils.SparkSetup
+import com.nuvento.sparkexam.comebinedata.JoinData
 import com.nuvento.sparkexam.handlefiles.ReadData._
 import com.nuvento.sparkexam.handlefiles.Schemas
+import com.nuvento.sparkexam.utils.SparkSetup
 
 object QuestionOnePractice extends App {
   SparkSetup.main(Array.empty[String])

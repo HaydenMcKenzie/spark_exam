@@ -1,8 +1,8 @@
 package com.nuvento.sparkexam.handlefiles
 
 import com.nuvento.sparkexam.SetUp
-import org.apache.spark.sql.{DataFrame, Dataset, Encoder}
 import com.nuvento.sparkexam.utils.SparkSetup
+import org.apache.spark.sql.{DataFrame, Dataset, Encoder}
 
 import scala.reflect.ClassTag
 

@@ -8,8 +8,9 @@ object WriteToFile extends App {
 
   def writeToFile(aggregated: Dataset[_], outputPath: String): Unit = {
     """
-      | @param aggregated: Take input Dataset
+      | @param aggregated: Take input Dataset that will saved to parquet file
       | @param outputPath: String for file path
+      |
       | @return: New file is created with "File has been created" or returns "File Already Exists" if file is already created
       |""".stripMargin
 
@@ -17,7 +18,7 @@ object WriteToFile extends App {
       aggregated.coalesce(1).write.parquet(outputPath)
       println("File Has Been Created.")
     } catch {
-      case e: Exception => println(s"File Already Exists")
+      case e: Exception => println(s"File Already Exists.")
     }
   }
 }
