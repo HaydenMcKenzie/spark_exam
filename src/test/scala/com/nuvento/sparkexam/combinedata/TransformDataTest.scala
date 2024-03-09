@@ -1,4 +1,4 @@
-package com.nuvento.sparkexam.combinedatatest
+package com.nuvento.sparkexam.combinedata
 
 import com.nuvento.sparkexam.comebinedata.TransformData.{aggregatedDataSet, removeColumns, stringToSeq}
 import com.nuvento.sparkexam.comebinedata.JoinData

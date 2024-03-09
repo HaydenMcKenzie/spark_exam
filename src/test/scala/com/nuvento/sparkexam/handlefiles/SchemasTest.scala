@@ -1,4 +1,4 @@
-package com.nuvento.sparkexam.handlefilestest
+package com.nuvento.sparkexam.handlefiles
 
 import com.nuvento.sparkexam.handlefiles.Schemas.{accountSchema, customerSchema, addressSchema}
 import com.nuvento.sparkexam.utils.SparkSetup
@@ -7,7 +7,6 @@ import org.scalatest.funsuite.AnyFunSuite
 
 class SchemasTest extends AnyFunSuite with BeforeAndAfter {
   SparkSetup.main(Array.empty[String])
-  import SparkSetup.spark.implicits._
 
   test("Test customerSchema") {
     // Create a sample instance of customerSchema

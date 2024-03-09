@@ -1,4 +1,4 @@
-package com.nuvento.sparkexam.combinedatatest
+package com.nuvento.sparkexam.combinedata
 
 import com.nuvento.sparkexam.comebinedata.JoinData
 import com.nuvento.sparkexam.handlefiles.ReadData.readFileData

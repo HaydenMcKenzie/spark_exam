@@ -6,6 +6,7 @@ import com.nuvento.sparkexam.SetUp.{addressData, parquetFilePath}
 import com.nuvento.sparkexam.handlefiles.ReadData.readParquetFile
 
 object QuestionTwo extends App {
+  """
   // Spark Setup
   SetUp.main(Array.empty[String])
 
@@ -23,5 +24,5 @@ object QuestionTwo extends App {
     processData.show()
   } catch {
     case e: Exception => println(s"File Does Not Exists.")
-  }
+  }"""
 }

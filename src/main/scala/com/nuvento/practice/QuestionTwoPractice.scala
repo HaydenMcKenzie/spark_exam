@@ -16,7 +16,7 @@ object QuestionTwoPractice extends App {
   val parquetDF = readParquetFile("src/main/scala/com/nuvento/sparkexam/output")
   val droppedParquet = parquetDF.drop("numberAccounts", "totalBalance", "averageBalance")
 
-  val processData = JoinData.joinData(droppedParquet, transformData, "customerId")
+  //val processData = JoinData.joinData(droppedParquet, transformData, "customerId")
 
-  processData.show()
+  //processData.show()
 }

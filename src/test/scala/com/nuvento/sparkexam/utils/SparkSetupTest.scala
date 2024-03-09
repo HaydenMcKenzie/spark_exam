@@ -1,4 +1,4 @@
-package com.nuvento.sparkexam.utilstest
+package com.nuvento.sparkexam.utils
 
 import com.nuvento.sparkexam.utils.SparkSetup
 import org.scalatest.BeforeAndAfter

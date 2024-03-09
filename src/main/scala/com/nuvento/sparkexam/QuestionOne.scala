@@ -11,7 +11,7 @@ object QuestionOne extends App {
   SetUp.main(Array.empty[String])
 
   // Transform Data
-  val joinDataByCustomerId = joinData(customerData, accountData, "customerId")
+  val joinDataByCustomerId = joinData(customerData, accountData, "customerId", "left")
   val aggregated = aggregatedDataSet(joinDataByCustomerId)
 
   // Show and Write to file

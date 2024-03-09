@@ -12,5 +12,5 @@ object SetUp extends App {
   val accountData = readFileData[Schemas.accountSchema]("account_data")
   val addressData = readFileData[Schemas.addressSchema]("address_data")
 
-  val parquetFilePath = "src/main/scala/com/nuvento/sparkexam/output"
+  val parquetFilePath = "output"
 }

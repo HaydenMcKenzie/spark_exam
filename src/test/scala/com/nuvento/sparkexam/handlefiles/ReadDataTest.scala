@@ -1,4 +1,4 @@
-package com.nuvento.sparkexam.handlefilestest
+package com.nuvento.sparkexam.handlefiles
 
 import com.nuvento.sparkexam.handlefiles.ReadData.readFileData
 import com.nuvento.sparkexam.handlefiles.Schemas

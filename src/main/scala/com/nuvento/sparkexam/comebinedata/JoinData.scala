@@ -3,7 +3,7 @@ package com.nuvento.sparkexam.comebinedata
 import org.apache.spark.sql.Dataset
 
 object JoinData extends App {
-  def joinData(firstDataSet: Dataset[_], secondDataSet: Dataset[_], column: String): Dataset[_] = {
+  def joinData(firstDataSet: Dataset[_], secondDataSet: Dataset[_], column: String, joinType: String): Dataset[_] = {
     """
       | @param firstData: Takes input Dataset that will be base Dataset
       | @param secondData: Takes input Dataset that will be joined to the base Dataset
@@ -12,6 +12,10 @@ object JoinData extends App {
       | @returns: A new Dataset that contains conjoined data from firstDataSet and secondDataSet
       |""".stripMargin
 
+    firstDataSet.join(secondDataSet, Seq(column), joinType)
+  }
+
+  def simpleJoinData(firstDataSet: Dataset[_], secondDataSet: Dataset[_], column: String): Dataset[_] = {
     firstDataSet.join(secondDataSet, column)
   }
 
