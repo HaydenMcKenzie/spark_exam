@@ -38,5 +38,7 @@ Transform Data - Question 2
     REMOVE column "addressId" from addressData
     JOIN addressData to Parguet file
 
+    CREATE a line of strings listing all
+
     TURN address from String to Seq
     SHOW new Dataset

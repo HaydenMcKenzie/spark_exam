@@ -16,18 +16,10 @@ object Schemas extends App {
   // address_data.csv schema
   case class addressSchema(addressId: String, customerId: String, address: String)
 
-  case class newAccountSchema(
-                             customerId: String,
-                             forename: String,
-                             surname: String,
-                             accounts: Array[String],
-                             numberAccounts: Integer,
-                             totalBalance: Long,
-                             averageBalance: Double
-                             )
+  case class addressDataSchema(addressId: String, customerId: String, address: String, number: Option[Int], road: Option[String], city: Option[String], country: Option[String])
 
   implicit val customerSchemaEncoder: Encoder[customerSchema] = Encoders.product[customerSchema]
   implicit val accountSchemaEncoder: Encoder[accountSchema] = Encoders.product[accountSchema]
   implicit val addressSchemaEncoder: Encoder[addressSchema] = Encoders.product[addressSchema]
-  implicit val newAccountSchemaEncoder: Encoder[newAccountSchema] = Encoders.product[newAccountSchema]
+  implicit val addressDataSchemaEncoder: Encoder[addressDataSchema] = Encoders.product[addressDataSchema]
 }
