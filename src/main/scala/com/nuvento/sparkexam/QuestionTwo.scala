@@ -3,7 +3,6 @@ package com.nuvento.sparkexam
 import com.nuvento.sparkexam.comebinedata.TransformData.{removeColumns, stringToSeq}
 import com.nuvento.sparkexam.comebinedata.JoinData
 import com.nuvento.sparkexam.SetUp.{addressData, parquetFilePath}
-import .grabColumn
 import com.nuvento.sparkexam.handlefiles.ReadData.readParquetFile
 
 object QuestionTwo extends App {

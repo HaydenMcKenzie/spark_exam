@@ -11,7 +11,7 @@ object Parsing extends App {
   import SparkSetup.spark.implicits._
 
   // Apply the UDF to the 'address' column to extract address components
-  def processParse(x: Dataset[_], y: String): Dataset[_] = {
+  def parse(x: Dataset[_], y: String): Dataset[_] = {
     val extractAddressInfoUDF = udf((address: String) => {
       val parts = address.split(", ")
       val number = parts.headOption.flatMap(part => "\\d+".r.findFirstIn(part).map(_.toInt))
