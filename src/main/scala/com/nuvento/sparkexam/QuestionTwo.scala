@@ -1,36 +1,35 @@
 package com.nuvento.sparkexam
 
-import com.nuvento.sparkexam.comebinedata.TransformData.{removeColumns, stringToSeq}
-import com.nuvento.sparkexam.comebinedata.JoinData
+import com.nuvento.sparkexam.comebinedata.TransformData.removeColumns
 import com.nuvento.sparkexam.SetUp.{addressData, parquetFilePath}
+import com.nuvento.sparkexam.comebinedata.Parsing.parseAddress
 import com.nuvento.sparkexam.handlefiles.ReadData.readParquetFile
+import com.nuvento.sparkexam.handlefiles.Schemas.CustomerDocument
+import com.nuvento.sparkexam.utils.SparkSetup
+import org.apache.spark.sql.functions.array
 
 object QuestionTwo extends App {
   // Spark Setup
   SetUp.main(Array.empty[String])
+  import SparkSetup.spark.implicits._
 
   try {
-    // Transforming the Data
+    // Data
     val parquetFile = readParquetFile(parquetFilePath)
+    val parsedData = parseAddress(addressData, "address")
 
-    // Remove columns from existing files
-    val removedColumnsForFirstData = removeColumns(parquetFile, "numberAccounts, totalBalance, averageBalance")
-    val removedColumnsForSecondFile = removeColumns(addressData, "addressId")
+    // Transforming the Data
+    val joinData = parquetFile.join(parsedData, "customerId")
+    val transformData = joinData.withColumn("mergedAddress", array($"addressId", $"customerId", $"address", $"number", $"road", $"city", $"country"))
 
-    // Join remaining columns and Remove address column
-    val joinedColumnsThatHaventBeenRemoved = JoinData.joinData(removedColumnsForFirstData, removedColumnsForSecondFile, "customerId", "left")
-    val removedColumnsForThirdFile = removeColumns(joinedColumnsThatHaventBeenRemoved, "address")
+    val processData = removeColumns(transformData, "addressID, address, number, road, city, country, numberAccounts, totalBalance, averageBalance")
+      .drop("addressID")
+      .withColumnRenamed("mergedAddress", "address")
 
-    // Turn addressData into a line of strings and made it the address column. Select customerId and address columns
-    //val processData = grabColumn(addressData, "address").select( "customerId","address")
+    val createCustomerDocument = processData.select($"customerId", $"forename", $"surname", $"accounts", $"address").as[CustomerDocument]
 
-    // Join address with remain columns. Turn Address into Seq
-    //val test = JoinData.simpleJoinData(removedColumnsForThirdFile,processData,"customerId")
-
-    // Print
-    //test.show(1000,truncate = false)
-    //test.select("address").show(false)
-    //test.printSchema()
+    // Show
+    createCustomerDocument.show(false)
 
   } catch {
     case e: Exception => println(s"File Does Not Exists.")

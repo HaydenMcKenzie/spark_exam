@@ -8,22 +8,22 @@ object Schemas extends App {
     |""".stripMargin
 
   // customer_data.csv schema
-  case class customerSchema(customerId: String, forename: String, surname: String)
+  case class RawCustomerSchema(customerId: String, forename: String, surname: String)
 
   // account_data.csv schema
-  case class accountSchema(customerId: String, accountId: String, balance: Double)
+  case class RawAccountSchema(customerId: String, accountId: String, balance: Double)
 
   // address_data.csv schema
-  case class addressSchema(addressId: String, customerId: String, address: String)
+  case class RawAddressSchema(addressId: String, customerId: String, address: String)
 
-  case class addressDataSchema(addressId: String, customerId: String, address: String, number: Option[Int], road: Option[String], city: Option[String], country: Option[String])
+  case class AddressSchema(addressId: String, customerId: String, address: String, number: Option[Int], road: Option[String], city: Option[String], country: Option[String])
 
   case class CustomerDocument(customerId: String, forename: String, surname: String, accounts: Seq[String], address: Seq[String])
 
 
-  implicit val customerSchemaEncoder: Encoder[customerSchema] = Encoders.product[customerSchema]
-  implicit val accountSchemaEncoder: Encoder[accountSchema] = Encoders.product[accountSchema]
-  implicit val addressSchemaEncoder: Encoder[addressSchema] = Encoders.product[addressSchema]
-  implicit val addressDataSchemaEncoder: Encoder[addressDataSchema] = Encoders.product[addressDataSchema]
+  implicit val customerSchemaEncoder: Encoder[RawCustomerSchema] = Encoders.product[RawCustomerSchema]
+  implicit val accountSchemaEncoder: Encoder[RawAccountSchema] = Encoders.product[RawAccountSchema]
+  implicit val addressSchemaEncoder: Encoder[RawAddressSchema] = Encoders.product[RawAddressSchema]
+  implicit val addressDataSchemaEncoder: Encoder[AddressSchema] = Encoders.product[AddressSchema]
   implicit val customerDocumentEncoder: Encoder[CustomerDocument] = Encoders.product[CustomerDocument]
 }

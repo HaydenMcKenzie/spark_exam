@@ -8,9 +8,9 @@ object SetUp extends App {
   SparkSetup.main(Array.empty[String])
   import SparkSetup.spark.implicits._
 
-  val customerData = readFileData[Schemas.customerSchema]("customer_data")
-  val accountData = readFileData[Schemas.accountSchema]("account_data")
-  val addressData = readFileData[Schemas.addressSchema]("address_data")
+  val customerData = readFileData[Schemas.RawCustomerSchema]("customer_data")
+  val accountData = readFileData[Schemas.RawAccountSchema]("account_data")
+  val addressData = readFileData[Schemas.RawAddressSchema]("address_data")
 
   val parquetFilePath = "output"
 }

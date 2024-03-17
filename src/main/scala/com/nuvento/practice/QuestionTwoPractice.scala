@@ -10,7 +10,7 @@ object QuestionTwoPractice extends App {
   import SparkSetup.spark.implicits._
   val parquetFilePath = "src/main/scala/com/nuvento/sparkexam/output"
 
-  val importData = readFileData[Schemas.addressSchema]("address_data")
+  val importData = readFileData[Schemas.RawAddressSchema]("address_data")
   val transformData = importData.drop("addressId")
 
   val parquetDF = readParquetFile("src/main/scala/com/nuvento/sparkexam/output")
