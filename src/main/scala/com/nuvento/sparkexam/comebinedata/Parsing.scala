@@ -1,10 +1,12 @@
 package com.nuvento.sparkexam.comebinedata
 
+import com.nuvento.practice.play.{AddressData, addressStruct}
 import com.nuvento.sparkexam.SetUp
+import com.nuvento.sparkexam.comebinedata.TransformData.removeColumns
 import com.nuvento.sparkexam.handlefiles.Schemas.AddressSchema
 import com.nuvento.sparkexam.utils.SparkSetup
 import org.apache.spark.sql.Dataset
-import org.apache.spark.sql.functions.{col, udf}
+import org.apache.spark.sql.functions.{col, collect_list, struct, udf}
 
 object Parsing extends App {
   SetUp.main(Array.empty[String])
@@ -31,5 +33,28 @@ object Parsing extends App {
         $"addressInfo._4".alias("country")
       )
       .as[AddressSchema]
+  }
+
+  def createCustomerDocument(data: Dataset[_]): Dataset[_] = {
+    val addressStruct = struct(
+      $"addressId",
+      $"customerId",
+      $"address",
+      $"number",
+      $"road",
+      $"city",
+      $"country"
+    )
+
+    data
+      .groupBy($"customerId", $"forename", $"surname", $"accounts")
+      .agg(collect_list(addressStruct).as("address"))
+      .select(
+        $"customerId",
+        $"forename",
+        $"surname",
+        $"accounts",
+        $"address".as[Seq[AddressData]],
+      )
   }
 }
