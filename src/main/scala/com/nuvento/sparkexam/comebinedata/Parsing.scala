@@ -1,10 +1,10 @@
 package com.nuvento.sparkexam.comebinedata
 
 import com.nuvento.sparkexam.SetUp
-import com.nuvento.sparkexam.handlefiles.Schemas.addressDataSchema
+import com.nuvento.sparkexam.handlefiles.Schemas.{addressDataSchema, CustomerDocument}
 import com.nuvento.sparkexam.utils.SparkSetup
 import org.apache.spark.sql.Dataset
-import org.apache.spark.sql.functions.{col, udf}
+import org.apache.spark.sql.functions.{array, col, udf}
 
 object Parsing extends App {
   SetUp.main(Array.empty[String])
@@ -33,4 +33,23 @@ object Parsing extends App {
       )
       .as[addressDataSchema]
   }
+
+  def customerDocument(data: Dataset[_], parseData: Dataset[_]): Dataset[_] = {
+
+    val joinedData = data.join(parseData, "customerId")
+
+    val joinAddressData = joinedData.withColumn("mergedAddress", array($"addressId", $"customerId", $"address", $"number", $"road", $"city", $"country"))
+      .drop("addressID", "address", "number", "road", "city", "country")
+      .withColumnRenamed("mergedAddress", "address")
+
+    joinAddressData.select(
+      $"customerId",
+      $"forename",
+      $"surname",
+      $"accounts",
+      $"address"
+    )
+      .as[CustomerDocument]
+  }
+
 }

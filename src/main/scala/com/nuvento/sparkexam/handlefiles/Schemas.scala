@@ -18,12 +18,12 @@ object Schemas extends App {
 
   case class addressDataSchema(addressId: String, customerId: String, address: String, number: Option[Int], road: Option[String], city: Option[String], country: Option[String])
 
-  case class customerDocument(customerId: String, forename: String, surname: String, accounts: Seq[accountSchema], address: Seq[addressDataSchema])
+  case class CustomerDocument(customerId: String, forename: String, surname: String, accounts: Seq[String], address: Seq[String])
 
 
   implicit val customerSchemaEncoder: Encoder[customerSchema] = Encoders.product[customerSchema]
   implicit val accountSchemaEncoder: Encoder[accountSchema] = Encoders.product[accountSchema]
   implicit val addressSchemaEncoder: Encoder[addressSchema] = Encoders.product[addressSchema]
   implicit val addressDataSchemaEncoder: Encoder[addressDataSchema] = Encoders.product[addressDataSchema]
-  implicit val customerDocumentEncoder: Encoder[customerDocument] = Encoders.product[customerDocument]
+  implicit val customerDocumentEncoder: Encoder[CustomerDocument] = Encoders.product[CustomerDocument]
 }
