@@ -1,6 +1,6 @@
 package com.nuvento.practice
 
-import com.nuvento.sparkexam.comebinedata.JoinData
+import com.nuvento.sparkexam.comebinedata.TransformData.stringToSeq
 import com.nuvento.sparkexam.handlefiles.ReadData._
 import com.nuvento.sparkexam.handlefiles.Schemas
 import com.nuvento.sparkexam.utils.SparkSetup
@@ -8,15 +8,17 @@ import com.nuvento.sparkexam.utils.SparkSetup
 object QuestionTwoPractice extends App {
   SparkSetup.main(Array.empty[String])
   import SparkSetup.spark.implicits._
-  val parquetFilePath = "src/main/scala/com/nuvento/sparkexam/output"
+  val parquetFilePath = "output"
 
   val importData = readFileData[Schemas.RawAddressSchema]("address_data")
   val transformData = importData.drop("addressId")
 
-  val parquetDF = readParquetFile("src/main/scala/com/nuvento/sparkexam/output")
+  val parquetDF = readParquetFile(parquetFilePath)
   val droppedParquet = parquetDF.drop("numberAccounts", "totalBalance", "averageBalance")
 
-  //val processData = JoinData.joinData(droppedParquet, transformData, "customerId")
+  val transformedData = droppedParquet.join(transformData, "customerId")
+  val seqTransformedData = stringToSeq(transformedData, "address")
 
-  //processData.show()
+  seqTransformedData.show()
+
 }

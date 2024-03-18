@@ -2,7 +2,7 @@ package com.nuvento.practice
 
 import com.nuvento.sparkexam.SetUp
 import com.nuvento.sparkexam.SetUp.{addressData, parquetFilePath}
-import com.nuvento.sparkexam.comebinedata.Parsing.{parse, parseAddress}
+import com.nuvento.sparkexam.comebinedata.Parsing.{createCustomerDocument, parseAddress}
 import com.nuvento.sparkexam.handlefiles.ReadData.readParquetFile
 import com.nuvento.sparkexam.utils._
 import org.apache.spark.sql.functions.{collect_list, struct}
@@ -10,6 +10,12 @@ import org.apache.spark.sql.functions.{collect_list, struct}
 object play extends App {
   SetUp.main(Array.empty[String])
   import SparkSetup.spark.implicits._
+
+  val parsedDataTest = parseAddress(addressData, "address")
+  parsedDataTest.show()
+  parsedDataTest.printSchema()
+
+
 
   case class AddressData(addressId: String, customerId: String, address: String, number: Option[Int], road: Option[String], city: Option[String], country: Option[String])
 
@@ -44,5 +50,5 @@ object play extends App {
     )
   joinD.show(false)
 
-  parse(joinX).show(false)
+  createCustomerDocument(joinX).show(false)
 }

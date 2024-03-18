@@ -4,7 +4,7 @@ import com.nuvento.sparkexam.comebinedata.TransformData.{aggregatedDataSet, remo
 import com.nuvento.sparkexam.comebinedata.JoinData
 import com.nuvento.sparkexam.handlefiles.ReadData.readFileData
 import com.nuvento.sparkexam.handlefiles.Schemas
-import Schemas.customerSchema
+import Schemas.RawCustomerSchema
 import com.nuvento.sparkexam.utils.SparkSetup
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.BeforeAndAfter
@@ -19,10 +19,10 @@ class TransformDataTest extends AnyFunSuite with BeforeAndAfter {
   val parquetFilePath = "src/main/scala/com/nuvento/sparkexam/output"
   val testParquetFilePath = "src/test/scala/com/nuvento/sparkexam/outputtest"
 
-  val customerData: Dataset[_] = readFileData[Schemas.customerSchema]("customer_data")
-  val accountData: Dataset[_] = readFileData[Schemas.accountSchema]("account_data")
-  val addressData: Dataset[_] = readFileData[Schemas.addressSchema]("address_data")
-  val joiningDataForCount: Dataset[_] = JoinData.joinData(customerData, accountData, "customerId")
+  val customerData: Dataset[_] = readFileData[Schemas.RawCustomerSchema]("customer_data")
+  val accountData: Dataset[_] = readFileData[Schemas.RawAccountSchema]("account_data")
+  val addressData: Dataset[_] = readFileData[Schemas.RawAddressSchema]("address_data")
+  val joiningDataForCount: Dataset[_] = JoinData.joinData(customerData, accountData, "customerId", "left")
 
 
 
@@ -42,7 +42,7 @@ class TransformDataTest extends AnyFunSuite with BeforeAndAfter {
       ("2", "Acc5", 10),
       ("3", "Acc6", 15))
       .toDF("customerId", "accountId", "balance")
-    val joiningFixedData = JoinData.joinData(firstData, secondData, "customerId")
+    val joiningFixedData = JoinData.joinData(firstData, secondData, "customerId", "left")
 
     // Call the function
     val result: Dataset[_] = aggregatedDataSet(joiningFixedData)
@@ -63,7 +63,7 @@ class TransformDataTest extends AnyFunSuite with BeforeAndAfter {
     val result: Dataset[_] = aggregatedDataSet(joiningDataForCount)
 
     // Test if it is has more than 0
-    assert(result.count() == 339)
+    assert(result.count() == 500)
   }
 
   test("Test aggrgatedDataSet function Schema") {

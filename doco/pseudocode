@@ -33,12 +33,15 @@ Transform Data - Question 1
 Transform Data - Question 2
     READ Parguet file
         from Question 1
+    PARSE "address" column in addressData
+        from SetUp.scala
 
-    REMOVE columns "numberAccounts", "totalBalance" and "averageBalance" from Parguet file
-    REMOVE column "addressId" from addressData
-    JOIN addressData to Parguet file
+    JOIN addressData to Parguet file via "customerId" column
+    CREATE customer document
+        SELECT addressId, customerId, address, number, road, city, country. Make them a struct
+        GROUPBY customerId, forename, surname, accounts
+        CREATE new column called "address"
+        SELECT customerId, forename, surname, accounts, address.
+            Put it in the AddressData schema
 
-    CREATE a line of strings listing all
-
-    TURN address from String to Seq
     SHOW new Dataset

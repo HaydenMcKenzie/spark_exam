@@ -12,9 +12,9 @@ class JoinDataTest extends AnyFunSuite with BeforeAndAfter {
   SparkSetup.main(Array.empty[String])
   import SparkSetup.spark.implicits._
 
-  val testingCustomerData: Dataset[_] = readFileData[Schemas.customerSchema]("customer_data")
-  val testingAccountData: Dataset[_] = readFileData[Schemas.accountSchema]("account_data")
-  val testingAddressData: Dataset[_] = readFileData[Schemas.addressSchema]("address_data")
+  val testingCustomerData: Dataset[_] = readFileData[Schemas.RawCustomerSchema]("customer_data")
+  val testingAccountData: Dataset[_] = readFileData[Schemas.RawAccountSchema]("account_data")
+  val testingAddressData: Dataset[_] = readFileData[Schemas.RawAddressSchema]("address_data")
 
   test("Test readFileData function on customer_data.csv must returns 500 lines of data") {
     // Call the function
@@ -52,6 +52,7 @@ class JoinDataTest extends AnyFunSuite with BeforeAndAfter {
     // Compare the result with the expected output
     assert(result == expected)
   }
+
   test("Test readFileData function account_data.csv schema") {
     // Call the function
     val result = testingAccountData.schema

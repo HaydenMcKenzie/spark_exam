@@ -1,13 +1,9 @@
 package com.nuvento.sparkexam
 
-import com.nuvento.practice.play.{joinX, parquetFile, parsedData}
-import com.nuvento.sparkexam.comebinedata.TransformData.removeColumns
 import com.nuvento.sparkexam.SetUp.{addressData, parquetFilePath}
 import com.nuvento.sparkexam.comebinedata.Parsing.{createCustomerDocument, parseAddress}
 import com.nuvento.sparkexam.handlefiles.ReadData.readParquetFile
-import com.nuvento.sparkexam.handlefiles.Schemas.{AddressSchema, CustomerDocument}
 import com.nuvento.sparkexam.utils.SparkSetup
-import org.apache.spark.sql.functions.array
 
 object QuestionTwo extends App {
   // Spark Setup
@@ -26,7 +22,7 @@ object QuestionTwo extends App {
     val processData = createCustomerDocument(joinData)
 
     // Show
-    processData.show(false)
+    processData.show(1000,false)
 
   } catch {
     case e: Exception => println(s"File Does Not Exists.")
