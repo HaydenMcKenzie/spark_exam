@@ -40,8 +40,10 @@ class ParsingTest extends AnyFunSuite with BeforeAndAfter {
 
   test("Testing createCustomerDocument") {
     // Import
+    val importAddressData = SetUp.addressData
+
     val parquetFile = readParquetFile(parquetFilePath)
-    val parsedData = parseAddress(addressData, "address")
+    val parsedData = parseAddress(importAddressData, "address")
     val joinData = parquetFile.join(parsedData, "customerId")
     val processData = createCustomerDocument(joinData)
 

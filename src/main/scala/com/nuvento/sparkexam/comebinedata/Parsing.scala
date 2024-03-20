@@ -1,9 +1,8 @@
 package com.nuvento.sparkexam.comebinedata
 
-import com.nuvento.practice.play.{AddressData, addressStruct}
 import com.nuvento.sparkexam.SetUp
-import com.nuvento.sparkexam.comebinedata.TransformData.removeColumns
 import com.nuvento.sparkexam.handlefiles.Schemas.AddressSchema
+import com.nuvento.sparkexam.comebinedata.TransformData.removeColumns
 import com.nuvento.sparkexam.utils.SparkSetup
 import org.apache.spark.sql.Dataset
 import org.apache.spark.sql.functions.{col, collect_list, struct, udf}
@@ -54,7 +53,7 @@ object Parsing extends App {
         $"forename",
         $"surname",
         $"accounts",
-        $"address".as[Seq[AddressData]],
+        $"address".as[Seq[AddressSchema]],
       )
   }
 }
