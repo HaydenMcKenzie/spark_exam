@@ -8,7 +8,6 @@ import org.scalatest.funsuite.AnyFunSuite
 
 class QuestionOneTest extends AnyFunSuite with BeforeAndAfter {
   SetUp.main(Array.empty[String])
-
   import com.nuvento.sparkexam.utils.SparkSetup.spark.implicits._
 
   test("Testing QuestionOne Main Program") {
