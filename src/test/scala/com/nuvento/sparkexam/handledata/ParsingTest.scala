@@ -1,8 +1,8 @@
-package com.nuvento.sparkexam.combinedata
+package com.nuvento.sparkexam.handledata
 
 import com.nuvento.sparkexam.SetUp
 import com.nuvento.sparkexam.SetUp.{addressData, parquetFilePath}
-import com.nuvento.sparkexam.comebinedata.Parsing.{createCustomerDocument, parseAddress}
+import com.nuvento.sparkexam.handledata.Parsing.{createCustomerDocument, parseAddress}
 import com.nuvento.sparkexam.handlefiles.ReadData.{readFileData, readParquetFile}
 import com.nuvento.sparkexam.handlefiles.Schemas
 import com.nuvento.sparkexam.utils.SparkSetup

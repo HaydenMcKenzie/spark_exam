@@ -1,7 +1,7 @@
 package com.nuvento.sparkexam
 
 import com.nuvento.sparkexam.SetUp.{addressData, parquetFilePath}
-import com.nuvento.sparkexam.comebinedata.Parsing.parseAddress
+import com.nuvento.sparkexam.handledata.Parsing.parseAddress
 import com.nuvento.sparkexam.handlefiles.ReadData.readParquetFile
 import org.scalatest.BeforeAndAfter
 import org.scalatest.funsuite.AnyFunSuite
@@ -13,7 +13,7 @@ class QuestionTwoTest extends AnyFunSuite with BeforeAndAfter {
   test("Testing Question Two Main Program") {
     val testParguetFile = readParquetFile(parquetFilePath)
     val testParsedData = parseAddress(addressData, "address")
-    val testMainProgram = QuestionTwo.questionTwo(testParguetFile, testParsedData, "customerId")
+    val testMainProgram = QuestionTwo.questionTwo(testParguetFile, testParsedData)
 
     // Actual
     val actual = testMainProgram.schema

@@ -3,6 +3,12 @@ package com.nuvento.sparkexam.handlefiles
 import org.apache.spark.sql.{Encoder, Encoders}
 
 object Schemas extends App {
+  """
+    | A list of Schemas used in throughout the program
+    |
+    | A list of implicit vals to allow the use throughout the program
+    |""".stripMargin
+
   case class RawCustomerSchema(customerId: String, forename: String, surname: String)
   case class RawAccountSchema(customerId: String, accountId: String, balance: Double)
   case class RawAddressSchema(addressId: String, customerId: String, address: String)

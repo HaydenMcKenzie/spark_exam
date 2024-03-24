@@ -1,10 +1,10 @@
-package com.nuvento.sparkexam.combinedata
+package com.nuvento.sparkexam.handledata
 
-import com.nuvento.sparkexam.comebinedata.TransformData.{aggregatedDataSet, removeColumns, stringToSeq}
-import com.nuvento.sparkexam.comebinedata.JoinData
+import com.nuvento.sparkexam.handledata.TransformData.{aggregatedDataSet, removeColumns, stringToSeq}
 import com.nuvento.sparkexam.handlefiles.ReadData.readFileData
 import com.nuvento.sparkexam.handlefiles.Schemas
 import Schemas.RawCustomerSchema
+import com.nuvento.sparkexam.SetUp.{accountData, customerData}
 import com.nuvento.sparkexam.utils.SparkSetup
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.BeforeAndAfter
@@ -22,7 +22,7 @@ class TransformDataTest extends AnyFunSuite with BeforeAndAfter {
   val customerData: Dataset[_] = readFileData[Schemas.RawCustomerSchema]("customer_data")
   val accountData: Dataset[_] = readFileData[Schemas.RawAccountSchema]("account_data")
   val addressData: Dataset[_] = readFileData[Schemas.RawAddressSchema]("address_data")
-  val joiningDataForCount: Dataset[_] = JoinData.joinData(customerData, accountData, "customerId", "left")
+  val joiningDataForCount: Dataset[_] = customerData.join(accountData, Seq("customerId"), "left")
 
 
 
@@ -42,7 +42,7 @@ class TransformDataTest extends AnyFunSuite with BeforeAndAfter {
       ("2", "Acc5", 10),
       ("3", "Acc6", 15))
       .toDF("customerId", "accountId", "balance")
-    val joiningFixedData = JoinData.joinData(firstData, secondData, "customerId", "left")
+    val joiningFixedData = firstData.join(secondData, Seq("customerId"), "left")
 
     // Call the function
     val result: Dataset[_] = aggregatedDataSet(joiningFixedData)
@@ -58,7 +58,7 @@ class TransformDataTest extends AnyFunSuite with BeforeAndAfter {
     assert(result.collect().sameElements(expected.collect()))
   }
 
-  test("Test aggrgatedDataSet function is equal to 339") {
+  test("Test aggrgatedDataSet function is equal to 500") {
     // Call the function
     val result: Dataset[_] = aggregatedDataSet(joiningDataForCount)
 

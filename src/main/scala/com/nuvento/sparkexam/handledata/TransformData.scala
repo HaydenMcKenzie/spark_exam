@@ -1,4 +1,4 @@
-package com.nuvento.sparkexam.comebinedata
+package com.nuvento.sparkexam.handledata
 
 import com.nuvento.sparkexam.SetUp
 import org.apache.spark.sql.Dataset

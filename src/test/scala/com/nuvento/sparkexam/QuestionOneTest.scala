@@ -11,7 +11,7 @@ class QuestionOneTest extends AnyFunSuite with BeforeAndAfter {
   import com.nuvento.sparkexam.utils.SparkSetup.spark.implicits._
 
   test("Testing QuestionOne Main Program") {
-    val testMainProgram = questionOne(customerData, accountData, "customerId", "left")
+    val testMainProgram = questionOne()
 
     // Actual
     val actual = testMainProgram.schema
