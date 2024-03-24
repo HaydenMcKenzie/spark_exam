@@ -7,7 +7,7 @@ The first question of our project involves processing raw data and transforming 
 Building upon the Parquet file generated in the first phase, the second question focuses on further refining the data by selecting necessary columns and enriching it with additional information. We retrieve more raw data, which has also undergone transformation, and seamlessly integrate it with our existing dataset.
 
 ##  Tutorial 
-First navigate to [src/main/scala/com/nuvento/sparkexam](https://github.com/HaydenMcKenzie/exam_spark/tree/master/src/main/scala/com/nuvento/sparkexam) and there is two scala files called [QuestionOne.scala](https://github.com/HaydenMcKenzie/exam_spark/blob/master/src/main/scala/com/nuvento/sparkexam/QuestionOne.scala) and [QuestionTwo.scala](https://github.com/HaydenMcKenzie/exam_spark/blob/master/src/main/scala/com/nuvento/sparkexam/QuestionTwo.scala) which contain my code for the exam.
+First navigate to [src/main/scala/com/nuvento/sparkexam](https://github.com/HaydenMcKenzie/exam_spark/tree/second_attempt/src/main/scala/com/nuvento/sparkexam) and there is two scala files called [QuestionOne.scala](https://github.com/HaydenMcKenzie/exam_spark/blob/second_attempt/src/main/scala/com/nuvento/sparkexam/QuestionOne.scala) and [QuestionTwo.scala](https://github.com/HaydenMcKenzie/exam_spark/blob/second_attempt/src/main/scala/com/nuvento/sparkexam/QuestionTwo.scala) which contain my code for the exam.
 
 
 - Before QuestionOne and QuestionTwo are run:
