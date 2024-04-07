@@ -5,23 +5,25 @@ import com.nuvento.sparkexam.handlefiles.Schemas.CustomerAccountOutput
 import com.nuvento.sparkexam.utils.SparkSetup
 import org.apache.spark.sql.{Dataset, Encoder}
 import org.apache.spark.sql.functions._
-import org.apache.spark.sql.types.{ArrayType, DataType, DecimalType, IntegerType, LongType, StringType}
+import org.apache.spark.sql.types.{IntegerType, LongType}
 
 object TransformData extends App {
   SetUp.main(Array.empty[String])
   import SparkSetup.spark.implicits._
 
-  // Question 1 Functions
   """
-    | @param joinedData: Joined Data from joinData() in question 1
+    | @param customerData: Input Dataset
+    | @param accountData: Input Dataset
+    | encoder: Encoder[CustomerAccountOutput] from Schemas.scala
     |
-    | @return: Returns new Dataset adding accounts, numberAccounts, totalBalance and averageBalance columns
+    | @return Dataset[CustomerAccountOutput]: Returns new Dataset adding accounts, numberAccounts, totalBalance and averageBalance columns
     |
+    | Left join customerData and accountData via customerId
     | Groups by "customerId", "forename", "surname"
-    | Collects all accountIds and puts them into a Seq. Renames column to accounts
-    | Counts call elements in Seq. Renames column to numberAccounts
-    | Adds all accounts balances to 2 decimal places. Renames column to totalBalance and puts $ at the front
-    | Averages all accounts balances to 2 decimal places. Renames column to averageBalance and puts $ at the front
+    | Collects all account information and puts them into a Seq[RawAccountData]. Renames column to accounts
+    | Counts elements in Seq[RawAccountData]. Renames column to numberAccounts
+    | Adds all accounts balances to 2 decimal places. Renames column to totalBalance
+    | Averages all accounts balances to 2 decimal places. Renames column to averageBalance
     |""".stripMargin
 
   def aggregatedDataSet(customerData: Dataset[_],accountData: Dataset[_])(implicit encoder: Encoder[CustomerAccountOutput]): Dataset[CustomerAccountOutput] = {

@@ -4,7 +4,7 @@ import com.nuvento.sparkexam.SetUp
 import com.nuvento.sparkexam.handlefiles.Schemas.{AddressSchema, CustomerDocument}
 import com.nuvento.sparkexam.utils.SparkSetup
 import org.apache.spark.sql.Dataset
-import org.apache.spark.sql.functions.{array, col, collect_list, struct, udf}
+import org.apache.spark.sql.functions.{array, col, struct, udf}
 
 object Parsing extends App {
   SetUp.main(Array.empty[String])
@@ -15,7 +15,7 @@ object Parsing extends App {
       | @param data: Input for a Dataset
       | @param addressString: Input for the column that needs to be split into multiple columns
       |
-      | @return: A new Dataset that splits selected column into separate columns
+      | @return Dataset[AddressSchema]: A new Dataset that splits selected column into separate columns
       |""".stripMargin
 
     val extractAddressInfoUDF = udf((address: String) => {
@@ -44,7 +44,7 @@ object Parsing extends App {
     """
       | @param data: Input Dataset
       |
-      | @return: A new Dataset that joins the parsed Dataset into a single column and selects certain columns using the AddressSchema Schema
+      | @return Dataset[CustomerDocument]: A new Dataset that joins the parsed Dataset into a single column and selects certain columns using the AddressSchema Schema
       |""".stripMargin
 
     val aggregated = data.select(

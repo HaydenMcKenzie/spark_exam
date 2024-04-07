@@ -8,7 +8,6 @@ import org.scalatest.funsuite.AnyFunSuite
 import org.apache.commons.io.FileUtils
 
 import java.io.File
-import java.nio.file.{Files, Paths}
 
 class WriteToFileTest extends AnyFunSuite with BeforeAndAfter {
   SetUp.main(Array.empty[String])

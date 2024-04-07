@@ -3,8 +3,7 @@ package com.nuvento.sparkexam.handlefiles
 import com.nuvento.sparkexam.SetUp
 import com.nuvento.sparkexam.handledata.Parsing.parseAddress
 import com.nuvento.sparkexam.handlefiles.Schemas._
-import org.apache.spark.sql.catalyst.encoders.ExpressionEncoder
-import org.apache.spark.sql.{Dataset, Encoder, Encoders}
+import org.apache.spark.sql.{Dataset, Encoders}
 import org.scalatest.BeforeAndAfter
 import org.scalatest.funsuite.AnyFunSuite
 

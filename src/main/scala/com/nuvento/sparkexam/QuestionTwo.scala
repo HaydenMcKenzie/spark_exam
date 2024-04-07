@@ -12,15 +12,15 @@ object QuestionTwo extends App {
   SetUp.main(Array.empty[String])
   import SparkSetup.spark.implicits._
 
-  def questionTwo(parguetDataInput: Dataset[_], parseAddressDataInput: Dataset[_]): Dataset[CustomerDocument] = {
+  def questionTwo(parquetDataInput: Dataset[_], parseAddressDataInput: Dataset[_]): Dataset[CustomerDocument] = {
     """
-      | @param parseAddressDataInput: Data from Question One that has been read into a Dataset from a parguet file
-      | @parse AddressDataInput: Address data from address_data.csv
+      | @param parquetDataInput: Data from Question One that has been read into a Dataset from a parquet file
+      | @parse parseAddressDataInput: From addressData and the address column
       |
-      | Parsed address data is joined into the parguet file data via the customerId column
-      | It is then passed the conjoined data and turns it into Dataset with the schema of CustomerDocument
+      | Parsed address data is joined into the parquet file data via the customerId column
+      | @return Dataset[CustomerDocument]: It is then passed the conjoined data and turns it into Dataset with the schema of CustomerDocument
       |""".stripMargin
-    val joinData = parguetDataInput.join(parseAddressDataInput, "customerId")
+    val joinData = parquetDataInput.join(parseAddressDataInput, "customerId")
     val processData = createCustomerDocument(joinData)
 
     processData

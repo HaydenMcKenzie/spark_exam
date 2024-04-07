@@ -1,6 +1,5 @@
 package com.nuvento.sparkexam.utils
 
-import com.nuvento.sparkexam.utils.SparkSetup
 import org.scalatest.BeforeAndAfter
 import org.scalatest.funsuite.AnyFunSuite
 import org.apache.log4j.{Level, Logger}
