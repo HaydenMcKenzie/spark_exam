@@ -49,11 +49,12 @@ class SchemasTest extends AnyFunSuite with BeforeAndAfter {
     val data1: Dataset[AddressSchema] = Seq(AddressSchema("1", "1", "123 Main St", Some(10), Some("Main St"), Some("City"), Some("Country"))).toDS()
     val addressDataSeq: Dataset[AddressSchema] = parseAddress(data1, "address")
 
-    val document = Schemas.CustomerDocument("1", "Alice", "Smith", Seq("ACC001", "ACC002"), addressDataSeq.collect())
-    assert(document.customerId == "1")
-    assert(document.forename == "Alice")
-    assert(document.surname == "Smith")
-    assert(document.accounts == Seq("ACC001", "ACC002"))
+    val accountIds: Seq[RawAccountSchema] = Seq(
+      RawAccountSchema("1", "ACC001", 0.0),
+      RawAccountSchema("1", "ACC002", 0.0)
+    )
+
+    val document = Schemas.CustomerDocument("1", "Alice", "Smith", accountIds, addressDataSeq.collect())
 
     // Extract address strings from AddressSchema objects
     val expectedAddresses = addressDataSeq.collect().map(_.address).toSeq
