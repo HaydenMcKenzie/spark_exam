@@ -1,15 +1,14 @@
 package com.nuvento.sparkexam.handledata
 
-import com.nuvento.sparkexam.handledata.TransformData.{aggregatedDataSet, removeColumns, stringToSeq}
+import com.nuvento.sparkexam.handledata.TransformData.aggregatedDataSet
 import com.nuvento.sparkexam.handlefiles.ReadData.readFileData
 import com.nuvento.sparkexam.handlefiles.Schemas
-import Schemas.RawCustomerSchema
-import com.nuvento.sparkexam.SetUp.{accountData, customerData}
+import Schemas.CustomerAccountOutput
 import com.nuvento.sparkexam.utils.SparkSetup
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.BeforeAndAfter
 import org.apache.spark.sql.types.{ArrayType, DoubleType, IntegerType, LongType, StringType, StructField, StructType}
-import org.apache.spark.sql.Dataset
+import org.apache.spark.sql.{Dataset, Encoders, Row}
 
 class TransformDataTest extends AnyFunSuite with BeforeAndAfter {
   SparkSetup.main(Array.empty[String])
@@ -26,105 +25,68 @@ class TransformDataTest extends AnyFunSuite with BeforeAndAfter {
 
 
 
-  // Testing aggrgatedDataSet function
-  test("Test aggrgatedDataSet function with fixed data") {
-    // Sample input data
-    val firstData = Seq(
-      ("1", "Alice", "Smith"),
-      ("2", "Bob", "Munns"),
-      ("3", "Charlie", "Johns"))
-      .toDF("customerId", "forename", "surname")
-    val secondData = Seq(
-      ("1", "Acc1", 10),
-      ("1", "Acc2", 10),
-      ("2", "Acc3", 13),
-      ("2", "Acc4", 10),
-      ("2", "Acc5", 10),
-      ("3", "Acc6", 15))
-      .toDF("customerId", "accountId", "balance")
-    val joiningFixedData = firstData.join(secondData, Seq("customerId"), "left")
-
-    // Call the function
-    val result: Dataset[_] = aggregatedDataSet(joiningFixedData)
-
-    // Expected result
-    val expected = Seq(
-      ("3", "Charlie", "Johns", Array("Acc6"),1, 15, 15.0),
-      ("1", "Alice", "Smith", Array("Acc2", "Acc1"), 2, 20, 10.0),
-      ("2", "Bob", "Munns", Array("Acc3", "Acc5", "Acc4"), 3, 33, 11.0))
-      .toDF("customerId", "forename", "surname", "accounts", "numberAccounts", "totalBalance", "averageBalance")
-
-    // Compare the result with the expected output
-    assert(result.collect().sameElements(expected.collect()))
-  }
-
   test("Test aggrgatedDataSet function is equal to 500") {
     // Call the function
-    val result: Dataset[_] = aggregatedDataSet(joiningDataForCount)
+    val result: Dataset[CustomerAccountOutput] = aggregatedDataSet(customerData, accountData)(Encoders.product[CustomerAccountOutput])
 
     // Test if it is has more than 0
     assert(result.count() == 500)
   }
 
-  test("Test aggrgatedDataSet function Schema") {
+  test("Test aggregatedDataSet function Schema") {
     // Call the function
-    val result: Dataset[_] = aggregatedDataSet(joiningDataForCount)
+    val result: Dataset[CustomerAccountOutput] = aggregatedDataSet(customerData, accountData)(Encoders.product[CustomerAccountOutput])
     val actualSchema = result.schema
 
     // Expected
-    val expectedSchema = StructType(Seq(
-      StructField("customerId", StringType, nullable = true),
-      StructField("forename", StringType, nullable = true),
-      StructField("surname", StringType, nullable = true),
-      StructField("accounts", ArrayType(StringType, false), nullable = true),
-      StructField("numberAccounts", IntegerType, nullable = false),
-      StructField("totalBalance", LongType, nullable = true),
-      StructField("averageBalance", DoubleType, nullable = true)
+    val expectedSchema = StructType(Array(
+      StructField("customerId", StringType, true),
+      StructField("forename", StringType, true),
+      StructField("surname", StringType, true),
+      StructField("accounts", ArrayType(
+        StructType(Array(
+          StructField("customerId", StringType, true),
+          StructField("accountId", StringType, true),
+          StructField("balance", IntegerType, true)
+        )),
+        false
+      )),
+      StructField("numberAccounts", IntegerType, false),
+      StructField("totalBalance", LongType, true),
+      StructField("averageBalance", DoubleType, true)
     ))
 
     // Compare the result with the expected output
     assert(actualSchema == expectedSchema)
   }
 
-  // Testing removeColumns function
-  test("Test removeColumns function with one column input") {
+  test("Test If Customer With No Accounts Seq Is Empty") {
     // Call the function
-    val result: Dataset[_] = removeColumns(customerData, "customerId")
-    val resultSchema = result.schema
+    val testData: Dataset[CustomerAccountOutput] = aggregatedDataSet(customerData, accountData)(Encoders.product[CustomerAccountOutput])
 
     // Expected
-    val expected = StructType(Seq(
-      StructField("forename", StringType, nullable = true),
-      StructField("surname", StringType, nullable = true),
-    ))
+    val filterData = testData
+      .filter($"customerId" === "IND0277")
+      .select($"accounts")
+    val expected = filterData.collect()
 
-    // Test
-    assert(resultSchema == expected)
+    // Compare the result with the expected output
+    val accountsArray = expected.head.getAs[Seq[(String, String, Int)]](0)
+    assert(accountsArray.isEmpty)
   }
 
-  test("Test removeColumns function with multiple column input") {
+  test("Test If Customer With Accounts Seq Is Non-Empty") {
     // Call the function
-    val result: Dataset[_] = removeColumns(customerData, "customerId, surname")
-    val resultSchema = result.schema
+    val testData: Dataset[CustomerAccountOutput] = aggregatedDataSet(customerData, accountData)(Encoders.product[CustomerAccountOutput])
 
     // Expected
-    val expected = StructType(Seq(
-      StructField("forename", StringType, nullable = true),
-    ))
+    val filterData = testData
+      .filter($"customerId" === "IND0113")
+      .select($"accounts")
+    val expected = filterData.collect()
 
-    // Test
-    assert(resultSchema == expected)
-  }
-
-  // Testing stringtoSeq function
-  test("Test stringtoSeq function turns address column from a string to an array") {
-    // Call the function
-    val result = stringToSeq(customerData, "customerId").select("customerId")
-
-    // Expected
-    val expectedSchema = StructType(Seq(StructField("customerId", ArrayType(StringType, true), nullable = true)))
-
-    // Test if it is has more than 0
-    assert(result.schema == expectedSchema)
+    // Compare the result with the expected output
+    val accountsArray = expected.head.getAs[Seq[(String, String, Int)]](0)
+    assert(accountsArray.nonEmpty)
   }
 }

@@ -1,7 +1,7 @@
 package com.nuvento.sparkexam.handledata
 
 import com.nuvento.sparkexam.SetUp
-import com.nuvento.sparkexam.SetUp.{addressData, parquetFilePath}
+import com.nuvento.sparkexam.SetUp.parquetFilePath
 import com.nuvento.sparkexam.handledata.Parsing.{createCustomerDocument, parseAddress}
 import com.nuvento.sparkexam.handlefiles.ReadData.{readFileData, readParquetFile}
 import com.nuvento.sparkexam.handlefiles.Schemas
@@ -55,17 +55,28 @@ class ParsingTest extends AnyFunSuite with BeforeAndAfter {
       StructField("customerId", StringType, nullable = true),
       StructField("forename", StringType, nullable = true),
       StructField("surname", StringType, nullable = true),
-      StructField("accounts", ArrayType(StringType, containsNull = true), nullable = true),
-      StructField("address", ArrayType(StructType(Seq(
-        StructField("addressId", StringType, nullable = true),
-        StructField("customerId", StringType, nullable = true),
-        StructField("address", StringType, nullable = true),
-        StructField("number", IntegerType, nullable = true),
-        StructField("road", StringType, nullable = true),
-        StructField("city", StringType, nullable = true),
-        StructField("country", StringType, nullable = true)
-      )), containsNull = false), nullable = true)
+      StructField("accounts", ArrayType(
+        StructType(Seq(
+          StructField("customerId", StringType, nullable = true),
+          StructField("accountId", StringType, nullable = true),
+          StructField("balance", IntegerType, nullable = true)
+        )),
+        containsNull = true
+      ), nullable = true),
+      StructField("address", ArrayType(
+        StructType(Seq(
+          StructField("addressId", StringType, nullable = true),
+          StructField("customerId", StringType, nullable = true),
+          StructField("address", StringType, nullable = true),
+          StructField("number", IntegerType, nullable = true),
+          StructField("road", StringType, nullable = true),
+          StructField("city", StringType, nullable = true),
+          StructField("country", StringType, nullable = true)
+        )),
+        containsNull = false
+      ), nullable = false)
     ))
+
 
     // Test
     assert(result == expected)

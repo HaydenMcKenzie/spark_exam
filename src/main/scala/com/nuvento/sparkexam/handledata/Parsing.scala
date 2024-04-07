@@ -1,17 +1,16 @@
 package com.nuvento.sparkexam.handledata
 
 import com.nuvento.sparkexam.SetUp
-import com.nuvento.sparkexam.handlefiles.Schemas.AddressSchema
-import com.nuvento.sparkexam.handledata.TransformData.removeColumns
+import com.nuvento.sparkexam.handlefiles.Schemas.{AddressSchema, CustomerDocument}
 import com.nuvento.sparkexam.utils.SparkSetup
 import org.apache.spark.sql.Dataset
-import org.apache.spark.sql.functions.{col, collect_list, struct, udf}
+import org.apache.spark.sql.functions.{array, col, collect_list, struct, udf}
 
 object Parsing extends App {
   SetUp.main(Array.empty[String])
   import SparkSetup.spark.implicits._
 
-  def parseAddress(data: Dataset[_], addressString: String): Dataset[_] = {
+  def parseAddress(data: Dataset[_], addressString: String): Dataset[AddressSchema] = {
     """
       | @param data: Input for a Dataset
       | @param addressString: Input for the column that needs to be split into multiple columns
@@ -41,31 +40,29 @@ object Parsing extends App {
       .as[AddressSchema]
   }
 
-  def createCustomerDocument(data: Dataset[_]): Dataset[_] = {
+  def createCustomerDocument(data: Dataset[_]): Dataset[CustomerDocument] = {
     """
       | @param data: Input Dataset
       |
       | @return: A new Dataset that joins the parsed Dataset into a single column and selects certain columns using the AddressSchema Schema
       |""".stripMargin
-    val addressStruct = struct(
-      $"addressId",
-      $"customerId",
-      $"address",
-      $"number",
-      $"road",
-      $"city",
-      $"country"
-    )
 
-    data
-      .groupBy($"customerId", $"forename", $"surname", $"accounts")
-      .agg(collect_list(addressStruct).as("address"))
-      .select(
+    val aggregated = data.select(
         $"customerId",
         $"forename",
         $"surname",
         $"accounts",
-        $"address".as[Seq[AddressSchema]],
+        array(struct(
+          $"addressId",
+          $"customerId",
+          $"address",
+          $"number",
+          $"road",
+          $"city",
+          $"country"
+        )).alias("address")
       )
+
+    aggregated.as[CustomerDocument]
   }
 }

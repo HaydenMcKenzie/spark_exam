@@ -23,7 +23,14 @@ class QuestionTwoTest extends AnyFunSuite with BeforeAndAfter {
       StructField("customerId", StringType, nullable = true),
       StructField("forename", StringType, nullable = true),
       StructField("surname", StringType, nullable = true),
-      StructField("accounts", ArrayType(StringType, containsNull = true), nullable = true),
+      StructField("accounts", ArrayType(
+        StructType(Seq(
+          StructField("customerId", StringType, nullable = true),
+          StructField("accountId", StringType, nullable = true),
+          StructField("balance", IntegerType, nullable = true)
+        )),
+        containsNull = true
+      ), nullable = true),
       StructField("address", ArrayType(
         StructType(Seq(
           StructField("addressId", StringType, nullable = true),
@@ -35,7 +42,7 @@ class QuestionTwoTest extends AnyFunSuite with BeforeAndAfter {
           StructField("country", StringType, nullable = true)
         )),
         containsNull = false
-      ), nullable = true)
+      ), nullable = false)
     ))
 
     // Test

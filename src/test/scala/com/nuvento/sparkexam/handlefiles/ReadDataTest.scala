@@ -7,7 +7,7 @@ import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructT
 import org.scalatest.BeforeAndAfter
 import org.scalatest.funsuite.AnyFunSuite
 
-class JoinDataTest extends AnyFunSuite with BeforeAndAfter {
+class ReadDataTest extends AnyFunSuite with BeforeAndAfter {
   SparkSetup.main(Array.empty[String])
   import SparkSetup.spark.implicits._
 

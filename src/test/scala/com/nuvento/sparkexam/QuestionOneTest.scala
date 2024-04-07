@@ -11,20 +11,27 @@ class QuestionOneTest extends AnyFunSuite with BeforeAndAfter {
   import com.nuvento.sparkexam.utils.SparkSetup.spark.implicits._
 
   test("Testing QuestionOne Main Program") {
-    val testMainProgram = questionOne()
+    val testMainProgram = questionOne(customerData,accountData)
 
     // Actual
     val actual = testMainProgram.schema
 
     // Except
-    val expect = StructType(Seq(
-      StructField("customerId", StringType, nullable = true),
-      StructField("forename", StringType, nullable = true),
-      StructField("surname", StringType, nullable = true),
-      StructField("accounts", ArrayType(StringType, containsNull = false), nullable = true),
-      StructField("numberAccounts", IntegerType, nullable = false),
-      StructField("totalBalance", LongType, nullable = true),
-      StructField("averageBalance", DoubleType, nullable = true)
+    val expect = StructType(Array(
+      StructField("customerId", StringType, true),
+      StructField("forename", StringType, true),
+      StructField("surname", StringType, true),
+      StructField("accounts", ArrayType(
+        StructType(Array(
+          StructField("customerId", StringType, true),
+          StructField("accountId", StringType, true),
+          StructField("balance", IntegerType, true)
+        )),
+        false
+      )),
+      StructField("numberAccounts", IntegerType, false),
+      StructField("totalBalance", LongType, true),
+      StructField("averageBalance", DoubleType, true)
     ))
 
     // Test
