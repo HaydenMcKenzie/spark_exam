@@ -1,7 +1,7 @@
 package com.nuvento.sparkexam.handledata
 
 import com.nuvento.sparkexam.SetUp
-import com.nuvento.sparkexam.handlefiles.Schemas.CustomerAccountOutput
+import com.nuvento.sparkexam.handlefiles.Schemas.{CustomerAccountOutput, RawAccountData, RawCustomerData}
 import com.nuvento.sparkexam.utils.SparkSetup
 import org.apache.spark.sql.{Dataset, Encoder}
 import org.apache.spark.sql.functions._
@@ -26,7 +26,7 @@ object TransformData extends App {
     | Averages all accounts balances to 2 decimal places. Renames column to averageBalance
     |""".stripMargin
 
-  def aggregatedDataSet(customerData: Dataset[_],accountData: Dataset[_])(implicit encoder: Encoder[CustomerAccountOutput]): Dataset[CustomerAccountOutput] = {
+  def aggregatedDataSet(customerData: Dataset[RawCustomerData],accountData: Dataset[RawAccountData])(implicit encoder: Encoder[CustomerAccountOutput]): Dataset[CustomerAccountOutput] = {
     val joinDataByCustomerId = customerData.join(accountData, Seq("customerId"), "left")
 
     joinDataByCustomerId.groupBy("customerId", "forename", "surname")

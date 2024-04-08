@@ -16,6 +16,8 @@ object SparkSetup extends App {
   val spark = SparkSession
     .builder
     .appName("SparkExam")
+    .config("spark.sql.parquet.compression.codec", "snappy")
+    //.config("spark.sql.avro.compression.codec", "gzip")
     .master("local[*]")
     .getOrCreate()
 }

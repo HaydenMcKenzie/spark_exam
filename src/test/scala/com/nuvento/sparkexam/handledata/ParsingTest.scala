@@ -16,7 +16,7 @@ class ParsingTest extends AnyFunSuite with BeforeAndAfter {
 
   test("Testing parseAddress") {
     // Import
-    val addressData = readFileData[Schemas.RawAddressSchema]("address_data")
+    val addressData = readFileData[Schemas.RawAddressData]("address_data")
     val parsedDataTest = parseAddress(addressData, "address")
 
     // Result

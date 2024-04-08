@@ -18,9 +18,9 @@ class TransformDataTest extends AnyFunSuite with BeforeAndAfter {
   val parquetFilePath = "src/main/scala/com/nuvento/sparkexam/output"
   val testParquetFilePath = "src/test/scala/com/nuvento/sparkexam/outputtest"
 
-  val customerData: Dataset[_] = readFileData[Schemas.RawCustomerSchema]("customer_data")
-  val accountData: Dataset[_] = readFileData[Schemas.RawAccountSchema]("account_data")
-  val addressData: Dataset[_] = readFileData[Schemas.RawAddressSchema]("address_data")
+  val customerData: Dataset[Schemas.RawCustomerData] = readFileData[Schemas.RawCustomerData]("customer_data")
+  val accountData: Dataset[Schemas.RawAccountData] = readFileData[Schemas.RawAccountData]("account_data")
+  val addressData: Dataset[Schemas.RawAddressData] = readFileData[Schemas.RawAddressData]("address_data")
   val joiningDataForCount: Dataset[_] = customerData.join(accountData, Seq("customerId"), "left")
 
 

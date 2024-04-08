@@ -11,9 +11,9 @@ class ReadDataTest extends AnyFunSuite with BeforeAndAfter {
   SparkSetup.main(Array.empty[String])
   import SparkSetup.spark.implicits._
 
-  val testingCustomerData: Dataset[_] = readFileData[Schemas.RawCustomerSchema]("customer_data")
-  val testingAccountData: Dataset[_] = readFileData[Schemas.RawAccountSchema]("account_data")
-  val testingAddressData: Dataset[_] = readFileData[Schemas.RawAddressSchema]("address_data")
+  val testingCustomerData: Dataset[_] = readFileData[Schemas.RawCustomerData]("customer_data")
+  val testingAccountData: Dataset[_] = readFileData[Schemas.RawAccountData]("account_data")
+  val testingAddressData: Dataset[_] = readFileData[Schemas.RawAddressData]("address_data")
 
   test("Test readFileData function on customer_data.csv must returns 500 lines of data") {
     // Call the function

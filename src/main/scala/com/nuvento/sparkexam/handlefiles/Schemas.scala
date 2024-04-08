@@ -9,18 +9,58 @@ object Schemas extends App {
     | A list of implicit vals to allow the use throughout the program
     |""".stripMargin
 
-  case class RawCustomerSchema(customerId: String, forename: String, surname: String)
-  case class RawAccountSchema(customerId: String, accountId: String, balance: Double)
-  case class RawAddressSchema(addressId: String, customerId: String, address: String)
-  case class AddressSchema(addressId: String, customerId: String, address: String, number: Option[Int], road: Option[String], city: Option[String], country: Option[String])
-  case class CustomerDocument(customerId: String, forename: String, surname: String, accounts: Seq[RawAccountSchema], address: Seq[AddressSchema])
-  case class CustomerAccountOutput(customerId: String, forename: String, surname: String, accounts: Seq[RawAccountSchema], numberAccounts: Integer, totalBalance: Long, averageBalance: Double)
+  // Question One File Schemas
+  case class RawCustomerData(customerId: String,
+                             forename: String,
+                             surname: String)
 
+  case class RawAccountData(customerId: String,
+                            accountId: String,
+                            balance: Double)
 
-  implicit val customerSchemaEncoder: Encoder[RawCustomerSchema] = Encoders.product[RawCustomerSchema]
-  implicit val accountSchemaEncoder: Encoder[RawAccountSchema] = Encoders.product[RawAccountSchema]
-  implicit val addressSchemaEncoder: Encoder[RawAddressSchema] = Encoders.product[RawAddressSchema]
-  implicit val addressDataSchemaEncoder: Encoder[AddressSchema] = Encoders.product[AddressSchema]
-  implicit val customerDocumentEncoder: Encoder[CustomerDocument] = Encoders.product[CustomerDocument]
+  // Question One Final Schema
+  case class CustomerAccountOutput(customerId: String,
+                                   forename: String,
+                                   surname: String,
+                                   accounts: Seq[RawAccountData],
+                                   numberAccounts: Integer,
+                                   totalBalance: Long,
+                                   averageBalance: Double)
+
+  // Question One Encoders
+  implicit val rawCustomerDataEncoder: Encoder[RawCustomerData] = Encoders.product[RawCustomerData]
+  implicit val rawAccountDataEncoder: Encoder[RawAccountData] = Encoders.product[RawAccountData]
   implicit val customerAccountOutputEncoder: Encoder[CustomerAccountOutput] = Encoders.product[CustomerAccountOutput]
+
+
+  // Question Two File Schemas
+  case class RawAddressData(addressId: String,
+                            customerId: String,
+                            address: String)
+
+  // Extra
+  case class AccountData(customerId: String,
+                         accountId: String,
+                         balance: Double)
+
+  case class AddressData(addressId: String,
+                         customerId: String,
+                         address: String,
+                         number: Option[Int],
+                         road: Option[String],
+                         city: Option[String],
+                         country: Option[String])
+
+  // Question Two Final Schema
+  case class CustomerDocument(customerId: String,
+                              forename: String,
+                              surname: String,
+                              accounts: Seq[AccountData],
+                              address: Seq[AddressData])
+
+  // Question Two Encoders
+  implicit val rawAddressDataEncoder: Encoder[RawAddressData] = Encoders.product[RawAddressData]
+  implicit val accountDataEncoder: Encoder[AccountData] = Encoders.product[AccountData]
+  implicit val addressDataEncoder: Encoder[AddressData] = Encoders.product[AddressData]
+  implicit val customerDocumentEncoder: Encoder[CustomerDocument] = Encoders.product[CustomerDocument]
 }

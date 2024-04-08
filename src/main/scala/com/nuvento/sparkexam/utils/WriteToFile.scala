@@ -16,6 +16,8 @@ object WriteToFile extends App {
 
     try {
       aggregated.coalesce(1).write.parquet(outputPath)
+      // For Mac
+      // aggregated.coalesce(1).write.option("compression", "gzip").parquet(outputPath)
       println("File Has Been Created.")
     } catch {
       case e: Exception => println(s"File Already Exists.")

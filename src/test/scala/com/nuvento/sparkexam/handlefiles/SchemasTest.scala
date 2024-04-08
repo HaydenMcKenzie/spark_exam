@@ -12,28 +12,28 @@ class SchemasTest extends AnyFunSuite with BeforeAndAfter {
   Schemas.main(Array.empty[String])
 
   test("Test RawCustomerSchema") {
-    val customer = Schemas.RawCustomerSchema("1", "Alice", "Smith")
+    val customer = Schemas.RawCustomerData("1", "Alice", "Smith")
     assert(customer.customerId == "1")
     assert(customer.forename == "Alice")
     assert(customer.surname == "Smith")
   }
 
   test("Test RawAccountSchema") {
-    val account = RawAccountSchema("1", "ACC001", 100.0)
+    val account = RawAccountData("1", "ACC001", 100.0)
     assert(account.customerId == "1")
     assert(account.accountId == "ACC001")
     assert(account.balance == 100.0)
   }
 
   test("Test RawAddressSchema") {
-    val address = RawAddressSchema("1", "1", "123 Main St")
+    val address = RawAddressData("1", "1", "123 Main St")
     assert(address.addressId == "1")
     assert(address.customerId == "1")
     assert(address.address == "123 Main St")
   }
 
   test("Test AddressSchema") {
-    val address = AddressSchema("1", "1", "123 Main St", Some(10), Some("Main St"), Some("City"), Some("Country"))
+    val address = AddressData("1", "1", "123 Main St", Some(10), Some("Main St"), Some("City"), Some("Country"))
     assert(address.addressId == "1")
     assert(address.customerId == "1")
     assert(address.address == "123 Main St")
@@ -46,12 +46,12 @@ class SchemasTest extends AnyFunSuite with BeforeAndAfter {
   test("Test CustomerDocument") {
     import com.nuvento.sparkexam.utils.SparkSetup.spark.implicits._
 
-    val data1: Dataset[AddressSchema] = Seq(AddressSchema("1", "1", "123 Main St", Some(10), Some("Main St"), Some("City"), Some("Country"))).toDS()
-    val addressDataSeq: Dataset[AddressSchema] = parseAddress(data1, "address")
+    val data1: Dataset[AddressData] = Seq(AddressData("1", "1", "123 Main St", Some(10), Some("Main St"), Some("City"), Some("Country"))).toDS()
+    val addressDataSeq: Dataset[AddressData] = parseAddress(data1, "address")
 
-    val accountIds: Seq[RawAccountSchema] = Seq(
-      RawAccountSchema("1", "ACC001", 0.0),
-      RawAccountSchema("1", "ACC002", 0.0)
+    val accountIds: Seq[AccountData] = Seq(
+      AccountData("1", "ACC001", 0.0),
+      AccountData("1", "ACC002", 0.0)
     )
 
     val document = Schemas.CustomerDocument("1", "Alice", "Smith", accountIds, addressDataSeq.collect())
@@ -66,9 +66,7 @@ class SchemasTest extends AnyFunSuite with BeforeAndAfter {
     val customerId = "IND0113"
     val forename = "Leonard"
     val surname = "Ball"
-    val accounts = Seq(
-      RawAccountSchema("IND0113", "ACC0577", 531)
-    )
+    val accounts = Seq(RawAccountData("IND0113", "ACC0577", 531))
     val numberAccounts = 1
     val totalBalance = 531L
     val averageBalance = 531.0
@@ -86,44 +84,32 @@ class SchemasTest extends AnyFunSuite with BeforeAndAfter {
   }
 
   test("Test customerSchemaEncoder") {
-    val test = customerSchemaEncoder
-    val encoder = Encoders.product[RawCustomerSchema]
-    assert(test == encoder)
+    val test = Encoders.product[RawCustomerData]
+    assert(rawCustomerDataEncoder.equals(test))
   }
 
-  test("Test accountSchemaEncoder") {
-    val test = accountSchemaEncoder
-    val encoder = Encoders.product[RawAccountSchema]
-    assert(test == encoder)
+  test("Test rawAccountDataEncoder") {
+    val test = Encoders.product[RawAccountData]
+    assert(rawAccountDataEncoder.equals(test))
   }
 
-  test("Test addressSchemaEncoder") {
-    val test = addressSchemaEncoder
-    val encoder = Encoders.product[RawAddressSchema]
-    assert(test == encoder)
+  test("Test accountDataEncoder") {
+    val test = Encoders.product[AccountData]
+    assert(accountDataEncoder.equals(test))
   }
 
-  test("Test addressDataSchemaEncoder") {
-    val test = addressDataSchemaEncoder
-    val encoder = Encoders.product[AddressSchema]
-    assert(test == encoder)
+  test("Test addressDataEncoder") {
+    val test = Encoders.product[AddressData]
+    assert(addressDataEncoder.equals(test))
   }
 
   test("Test customerDocumentEncoder") {
-    // Create an instance of the Encoder[CustomerDocument]
-    val encoderTest = customerDocumentEncoder
-    val encoder = Encoders.product[CustomerDocument]
-
-    // Ensure that the encoder is of the correct type
-    assert(encoderTest.toString === encoder.toString)
+    val test = Encoders.product[CustomerDocument]
+    assert(customerDocumentEncoder.schema == test.schema)
   }
 
   test("Test customerAccountOutputEncoder") {
-    // Create an instance of the Encoder[CustomerAccountOutput]
-    val encoderTest = customerAccountOutputEncoder
-    val encoder = Encoders.product[CustomerAccountOutput]
-
-    // Ensure that the encoder is of the correct type
-    assert(encoderTest.toString === encoder.toString)
+    val test = Encoders.product[CustomerAccountOutput]
+    assert(customerAccountOutputEncoder.schema == test.schema)
   }
 }

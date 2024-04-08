@@ -13,7 +13,7 @@ object QuestionOne extends App {
   SetUp.main(Array.empty[String])
   import SparkSetup.spark.implicits._
 
-  def questionOne(customerData: Dataset[RawCustomerSchema], accountData: Dataset[RawAccountSchema]): Dataset[CustomerAccountOutput] = {
+  def questionOne(customerData: Dataset[RawCustomerData], accountData: Dataset[RawAccountData]): Dataset[CustomerAccountOutput] = {
     """
       | Main Program for Question One
       |
@@ -36,5 +36,5 @@ object QuestionOne extends App {
   val answer: Dataset[CustomerAccountOutput] = questionOne(customerData,accountData)
   answer.show(false)
 
-  writeToFile(answer, parquetFilePath) // compression
+  writeToFile(answer, parquetFilePath)
 }
