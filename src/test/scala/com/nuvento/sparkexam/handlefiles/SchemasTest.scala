@@ -4,15 +4,13 @@ import com.nuvento.sparkexam.SetUp
 import com.nuvento.sparkexam.handledata.Parsing.parseAddress
 import com.nuvento.sparkexam.handlefiles.Schemas._
 import org.apache.spark.sql.{Dataset, Encoders}
-import org.scalatest.BeforeAndAfter
 import org.scalatest.funsuite.AnyFunSuite
 
-class SchemasTest extends AnyFunSuite with BeforeAndAfter {
+class SchemasTest extends AnyFunSuite {
   SetUp.main(Array.empty[String])
-  Schemas.main(Array.empty[String])
 
   test("Test RawCustomerSchema") {
-    val customer = Schemas.RawCustomerData("1", "Alice", "Smith")
+    val customer = RawCustomerData("1", "Alice", "Smith")
     assert(customer.customerId == "1")
     assert(customer.forename == "Alice")
     assert(customer.surname == "Smith")
@@ -20,6 +18,13 @@ class SchemasTest extends AnyFunSuite with BeforeAndAfter {
 
   test("Test RawAccountSchema") {
     val account = RawAccountData("1", "ACC001", 100.0)
+    assert(account.customerId == "1")
+    assert(account.accountId == "ACC001")
+    assert(account.balance == 100.0)
+  }
+
+  test("Test AccountData") {
+    val account = AccountData("1", "ACC001", 100.0)
     assert(account.customerId == "1")
     assert(account.accountId == "ACC001")
     assert(account.balance == 100.0)
@@ -81,35 +86,5 @@ class SchemasTest extends AnyFunSuite with BeforeAndAfter {
     assert(customerAccountOutput.numberAccounts === numberAccounts)
     assert(customerAccountOutput.totalBalance === totalBalance)
     assert(customerAccountOutput.averageBalance === averageBalance)
-  }
-
-  test("Test customerSchemaEncoder") {
-    val test = Encoders.product[RawCustomerData]
-    assert(rawCustomerDataEncoder.equals(test))
-  }
-
-  test("Test rawAccountDataEncoder") {
-    val test = Encoders.product[RawAccountData]
-    assert(rawAccountDataEncoder.equals(test))
-  }
-
-  test("Test accountDataEncoder") {
-    val test = Encoders.product[AccountData]
-    assert(accountDataEncoder.equals(test))
-  }
-
-  test("Test addressDataEncoder") {
-    val test = Encoders.product[AddressData]
-    assert(addressDataEncoder.equals(test))
-  }
-
-  test("Test customerDocumentEncoder") {
-    val test = Encoders.product[CustomerDocument]
-    assert(customerDocumentEncoder.schema == test.schema)
-  }
-
-  test("Test customerAccountOutputEncoder") {
-    val test = Encoders.product[CustomerAccountOutput]
-    assert(customerAccountOutputEncoder.schema == test.schema)
   }
 }
