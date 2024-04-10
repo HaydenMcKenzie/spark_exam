@@ -3,18 +3,36 @@ package com.nuvento.sparkexam.handlefiles
 import com.nuvento.sparkexam.SetUp
 import com.nuvento.sparkexam.handledata.Parsing.parseAddress
 import com.nuvento.sparkexam.handlefiles.Schemas._
+import org.apache.spark.sql.types.{StringType, StructField, StructType}
 import org.apache.spark.sql.{Dataset, Encoders}
 import org.scalatest.funsuite.AnyFunSuite
 
 class SchemasTest extends AnyFunSuite {
   SetUp.main(Array.empty[String])
 
-  test("Test RawCustomerSchema") {
+  test("Test Schemas Object") {
+    assert(Schemas.isInstanceOf[Schemas.type])
+  }
+
+  test("Test RawCustomerData") {
     val customer = RawCustomerData("1", "Alice", "Smith")
     assert(customer.customerId == "1")
     assert(customer.forename == "Alice")
     assert(customer.surname == "Smith")
   }
+
+  test("Test RawCustomerSchema") {
+    val expected = StructType(Array(
+      StructField("customerId", StringType, true),
+      StructField("forename", StringType, true),
+      StructField("surname", StringType, true)
+    ))
+
+    val actualSchema = Encoders.product[RawCustomerData].schema
+
+    assert(actualSchema === expected)
+  }
+
 
   test("Test RawAccountSchema") {
     val account = RawAccountData("1", "ACC001", 100.0)
