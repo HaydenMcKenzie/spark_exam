@@ -44,6 +44,10 @@ object Parsing extends App {
     """
       | @param data: Input Dataset
       |
+      | @function aggregated:
+      | Select customerId, forename, surname and account
+      | Select addressId, customerId, address, number, road, city, country and put it into a array. Alias "address"
+      |
       | @return Dataset[CustomerDocument]: A new Dataset that joins the parsed Dataset into a single column and selects certain columns using the AddressSchema Schema
       |""".stripMargin
 

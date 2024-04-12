@@ -7,7 +7,7 @@ import org.apache.spark.sql.{Dataset, Encoder}
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.{IntegerType, LongType}
 
-object TransformData extends App {
+object TransformData {
   SetUp.main(Array.empty[String])
   import SparkSetup.spark.implicits._
 

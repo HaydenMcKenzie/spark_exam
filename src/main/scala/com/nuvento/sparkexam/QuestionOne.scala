@@ -8,7 +8,7 @@ import org.apache.spark.sql.{Dataset,Encoders}
 import com.nuvento.sparkexam.handlefiles.Schemas._
 import com.nuvento.sparkexam.utils.SparkSetup
 
-object QuestionOne extends App {
+object QuestionOne {
   // Spark setup
   SetUp.main(Array.empty[String])
   import SparkSetup.spark.implicits._
@@ -24,7 +24,7 @@ object QuestionOne extends App {
       | Joins customerData and accountData via customerId. This is by a left join
       | It then created accounts, totalBalance and averageBalance
       |
-      | @return Dataset[CustomerAccountOutput]: a new Dataset with the schema of CustomerAccountOutput and writes it to file
+      | @return Dataset[CustomerAccountOutput]: a new Dataset with the schema of CustomerAccountOutput
       |""".stripMargin
 
     val aggregated: Dataset[CustomerAccountOutput] = aggregatedDataSet(customerData, accountData)(Encoders.product[CustomerAccountOutput])
@@ -33,8 +33,22 @@ object QuestionOne extends App {
   }
 
   // Show and Write to file
-  val answer: Dataset[CustomerAccountOutput] = questionOne(customerData,accountData)
-  answer.show(false)
+  def answer(outputPath: String): Dataset[CustomerAccountOutput] = {
+    """
+      | answer Program for Question One
+      |
+      | @return Dataset[CustomerAccountOutput]: a new Dataset with the schema of CustomerAccountOutput and writes it to file
+      |""".stripMargin
+    val answer: Dataset[CustomerAccountOutput] = questionOne(customerData, accountData)
+    answer.show(false)
 
-  writeToFile(answer, parquetFilePath)
+    writeToFile(answer, outputPath)
+    answer
+  }
+
+
+  def main(args: Array[String]): Unit  = {
+    // Call App
+    answer("output")
+  }
 }

@@ -1,5 +1,6 @@
 package com.nuvento.sparkexam.utils
 
+// Apache Imports
 import org.apache.log4j._
 import org.apache.spark.sql.SparkSession
 

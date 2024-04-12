@@ -1,11 +1,17 @@
 package com.nuvento.sparkexam.handlefiles
 
+// Nuvento Imports
 import com.nuvento.sparkexam.handlefiles.ReadData.readFileData
 import com.nuvento.sparkexam.utils.SparkSetup
+
+// Apache Imports
 import org.apache.spark.sql.Dataset
 import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructType}
+
+// ScalaTest Imports
 import org.scalatest.BeforeAndAfter
 import org.scalatest.funsuite.AnyFunSuite
+
 
 class ReadDataTest extends AnyFunSuite with BeforeAndAfter {
   SparkSetup.main(Array.empty[String])
@@ -25,6 +31,7 @@ class ReadDataTest extends AnyFunSuite with BeforeAndAfter {
     // Compare the result with the expected output
     assert(result == expected)
   }
+
   test("Test readFileData function customer_data.csv schema") {
     // Call the function
     val result = testingCustomerData.schema
@@ -39,7 +46,6 @@ class ReadDataTest extends AnyFunSuite with BeforeAndAfter {
     // Compare the result with the expected output
     assert(result == expected)
   }
-
 
   test("Test readFileData function on account_data.csv must returns 600 lines of data") {
     // Call the function
@@ -67,7 +73,6 @@ class ReadDataTest extends AnyFunSuite with BeforeAndAfter {
     assert(result == expected)
   }
 
-
   test("Test readFileData function on address_data.csv must returns 500 lines of data") {
     // Call the function
     val result = testingAddressData.collect().length
@@ -78,6 +83,7 @@ class ReadDataTest extends AnyFunSuite with BeforeAndAfter {
     // Compare the result with the expected output
     assert(result == expected)
   }
+
   test("Test readFileData function address_data.csv schema") {
     // Call the function
     val result = testingAddressData.schema

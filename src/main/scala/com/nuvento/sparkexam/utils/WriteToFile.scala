@@ -4,7 +4,6 @@ import com.nuvento.sparkexam.SetUp
 import org.apache.spark.sql.Dataset
 
 object WriteToFile extends App {
-  SetUp.main(Array.empty[String])
 
   def writeToFile(aggregated: Dataset[_], outputPath: String): Unit = {
     """

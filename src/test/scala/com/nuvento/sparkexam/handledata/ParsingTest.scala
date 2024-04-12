@@ -1,16 +1,20 @@
 package com.nuvento.sparkexam.handledata
 
+// Nuvento Imports
 import com.nuvento.sparkexam.SetUp
 import com.nuvento.sparkexam.SetUp.parquetFilePath
 import com.nuvento.sparkexam.handledata.Parsing.{createCustomerDocument, parseAddress}
 import com.nuvento.sparkexam.handlefiles.ReadData.{readFileData, readParquetFile}
 import com.nuvento.sparkexam.handlefiles.Schemas
 import com.nuvento.sparkexam.utils.SparkSetup
+
+// Apache Imports
 import org.apache.spark.sql.types.{ArrayType, IntegerType, StringType, StructField, StructType}
-import org.scalatest.BeforeAndAfter
+
+// ScalaTest Imports
 import org.scalatest.funsuite.AnyFunSuite
 
-class ParsingTest extends AnyFunSuite with BeforeAndAfter {
+class ParsingTest extends AnyFunSuite {
   SetUp.main(Array.empty[String])
   import SparkSetup.spark.implicits._
 

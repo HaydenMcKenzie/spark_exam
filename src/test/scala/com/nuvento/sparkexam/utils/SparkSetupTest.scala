@@ -1,8 +1,12 @@
 package com.nuvento.sparkexam.utils
 
+// ScalaTest Imports
 import org.scalatest.BeforeAndAfter
 import org.scalatest.funsuite.AnyFunSuite
+
+// Apache Imports
 import org.apache.log4j.{Level, Logger}
+
 
 class SparkSetupTest extends AnyFunSuite with BeforeAndAfter {
 

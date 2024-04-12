@@ -1,9 +1,15 @@
 package com.nuvento.sparkexam
 
+// Nuvento Imports
 import com.nuvento.sparkexam.utils.SparkSetup
+
+// Apache Imports
 import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructType}
+
+// ScalaTest Imports
 import org.scalatest.BeforeAndAfter
 import org.scalatest.funsuite.AnyFunSuite
+
 
 class SetUpTest extends AnyFunSuite with BeforeAndAfter {
   SparkSetup.main(Array.empty[String])

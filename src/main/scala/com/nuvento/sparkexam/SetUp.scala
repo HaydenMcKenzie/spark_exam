@@ -1,5 +1,6 @@
 package com.nuvento.sparkexam
 
+// Nuvento Imports
 import com.nuvento.sparkexam.handlefiles.ReadData.readFileData
 import com.nuvento.sparkexam.handlefiles.Schemas
 import com.nuvento.sparkexam.utils.SparkSetup
@@ -12,5 +13,5 @@ object SetUp extends App {
   lazy val accountData = readFileData[Schemas.RawAccountData]("account_data")
   lazy val addressData = readFileData[Schemas.RawAddressData]("address_data")
 
-  val parquetFilePath = "output"
+  val parquetFilePath = "output"// remove
 }

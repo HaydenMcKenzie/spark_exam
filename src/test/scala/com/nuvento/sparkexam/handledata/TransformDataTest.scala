@@ -1,20 +1,28 @@
 package com.nuvento.sparkexam.handledata
 
+// Nuvento Imports
 import com.nuvento.sparkexam.handledata.TransformData.aggregatedDataSet
 import com.nuvento.sparkexam.handlefiles.ReadData.readFileData
 import com.nuvento.sparkexam.handlefiles.Schemas
 import Schemas.CustomerAccountOutput
+import com.nuvento.sparkexam.SetUp
 import com.nuvento.sparkexam.utils.SparkSetup
+
+// ScalaTest Imports
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.BeforeAndAfter
+
+// Apache Spark Imports
 import org.apache.spark.sql.types.{ArrayType, DoubleType, IntegerType, LongType, StringType, StructField, StructType}
 import org.apache.spark.sql.{Dataset, Encoders}
 
+
 class TransformDataTest extends AnyFunSuite with BeforeAndAfter {
+  SetUp.main(Array.empty[String])
   SparkSetup.main(Array.empty[String])
   import com.nuvento.sparkexam.utils.SparkSetup.spark.implicits._
 
-  // Local repeated data
+  // Local data
   val parquetFilePath = "src/main/scala/com/nuvento/sparkexam/output"
   val testParquetFilePath = "src/test/scala/com/nuvento/sparkexam/outputtest"
 
@@ -25,7 +33,7 @@ class TransformDataTest extends AnyFunSuite with BeforeAndAfter {
 
 
 
-  test("Test aggrgatedDataSet function is equal to 500") {
+  test("Test aggregatedDataSet function is equal to 500") {
     // Call the function
     val result: Dataset[CustomerAccountOutput] = aggregatedDataSet(customerData, accountData)(Encoders.product[CustomerAccountOutput])
 
@@ -60,7 +68,7 @@ class TransformDataTest extends AnyFunSuite with BeforeAndAfter {
     assert(actualSchema == expectedSchema)
   }
 
-  test("Test If Customer With No Accounts Seq Is Empty") {
+  test("Test If [IND0277,Victoria,Hodges] Accounts Seq Is Empty") {
     // Call the function
     val testData: Dataset[CustomerAccountOutput] = aggregatedDataSet(customerData, accountData)(Encoders.product[CustomerAccountOutput])
 
@@ -75,7 +83,7 @@ class TransformDataTest extends AnyFunSuite with BeforeAndAfter {
     assert(accountsArray.isEmpty)
   }
 
-  test("Test If Customer With Accounts Seq Is Non-Empty") {
+  test("Test If [IND0113,Leonard,Ball] Accounts Seq Is Non-Empty") {
     // Call the function
     val testData: Dataset[CustomerAccountOutput] = aggregatedDataSet(customerData, accountData)(Encoders.product[CustomerAccountOutput])
 

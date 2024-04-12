@@ -1,13 +1,20 @@
 package com.nuvento.sparkexam.utils
 
+// Nuvento Imports
 import com.nuvento.sparkexam.SetUp
 import com.nuvento.sparkexam.utils.WriteToFile.writeToFile
+
+// Apache Imports
 import org.apache.spark.sql.Dataset
-import org.scalatest.BeforeAndAfter
-import org.scalatest.funsuite.AnyFunSuite
 import org.apache.commons.io.FileUtils
 
+// ScalaTest Imports
+import org.scalatest.BeforeAndAfter
+import org.scalatest.funsuite.AnyFunSuite
+
+// Java Imports
 import java.io.File
+
 
 class WriteToFileTest extends AnyFunSuite with BeforeAndAfter {
   SetUp.main(Array.empty[String])

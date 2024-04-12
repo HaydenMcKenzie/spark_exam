@@ -1,18 +1,19 @@
 package com.nuvento.sparkexam.handlefiles
 
+// Nuvento Imports
 import com.nuvento.sparkexam.SetUp
 import com.nuvento.sparkexam.handledata.Parsing.parseAddress
 import com.nuvento.sparkexam.handlefiles.Schemas._
-import org.apache.spark.sql.types.{StringType, StructField, StructType}
-import org.apache.spark.sql.{Dataset, Encoders}
+
+// Apache Imports
+import org.apache.spark.sql.Dataset
+
+// ScalaTest Imports
 import org.scalatest.funsuite.AnyFunSuite
+
 
 class SchemasTest extends AnyFunSuite {
   SetUp.main(Array.empty[String])
-
-  test("Test Schemas Object") {
-    assert(Schemas.isInstanceOf[Schemas.type])
-  }
 
   test("Test RawCustomerData") {
     val customer = RawCustomerData("1", "Alice", "Smith")
@@ -21,24 +22,40 @@ class SchemasTest extends AnyFunSuite {
     assert(customer.surname == "Smith")
   }
 
-  test("Test RawCustomerSchema") {
-    val expected = StructType(Array(
-      StructField("customerId", StringType, true),
-      StructField("forename", StringType, true),
-      StructField("surname", StringType, true)
-    ))
-
-    val actualSchema = Encoders.product[RawCustomerData].schema
-
-    assert(actualSchema === expected)
-  }
-
-
-  test("Test RawAccountSchema") {
+  test("Test RawAccountData") {
     val account = RawAccountData("1", "ACC001", 100.0)
     assert(account.customerId == "1")
     assert(account.accountId == "ACC001")
     assert(account.balance == 100.0)
+  }
+
+  test("Test CustomerAccountOutput") {
+    // Define sample data
+    val customerId = "IND0113"
+    val forename = "Leonard"
+    val surname = "Ball"
+    val accounts = Seq(RawAccountData("IND0113", "ACC0577", 531))
+    val numberAccounts = 1
+    val totalBalance = 531L
+    val averageBalance = 531.0
+
+    val customerAccountOutput = CustomerAccountOutput(customerId, forename, surname, accounts, numberAccounts, totalBalance, averageBalance)
+
+    // Assert fields of CustomerAccountOutput
+    assert(customerAccountOutput.customerId === customerId)
+    assert(customerAccountOutput.forename === forename)
+    assert(customerAccountOutput.surname === surname)
+    assert(customerAccountOutput.accounts === accounts)
+    assert(customerAccountOutput.numberAccounts === numberAccounts)
+    assert(customerAccountOutput.totalBalance === totalBalance)
+    assert(customerAccountOutput.averageBalance === averageBalance)
+  }
+
+  test("Test RawAddressData") {
+    val address = RawAddressData("1", "1", "123 Main St")
+    assert(address.addressId == "1")
+    assert(address.customerId == "1")
+    assert(address.address == "123 Main St")
   }
 
   test("Test AccountData") {
@@ -48,14 +65,8 @@ class SchemasTest extends AnyFunSuite {
     assert(account.balance == 100.0)
   }
 
-  test("Test RawAddressSchema") {
-    val address = RawAddressData("1", "1", "123 Main St")
-    assert(address.addressId == "1")
-    assert(address.customerId == "1")
-    assert(address.address == "123 Main St")
-  }
 
-  test("Test AddressSchema") {
+  test("Test AddressData") {
     val address = AddressData("1", "1", "123 Main St", Some(10), Some("Main St"), Some("City"), Some("Country"))
     assert(address.addressId == "1")
     assert(address.customerId == "1")
@@ -84,25 +95,8 @@ class SchemasTest extends AnyFunSuite {
     assert(document.address.map(_.address) == expectedAddresses) // Compare only the address field
   }
 
-  test("Test CustomerAccountOutput") {
-    // Define sample data
-    val customerId = "IND0113"
-    val forename = "Leonard"
-    val surname = "Ball"
-    val accounts = Seq(RawAccountData("IND0113", "ACC0577", 531))
-    val numberAccounts = 1
-    val totalBalance = 531L
-    val averageBalance = 531.0
-
-    val customerAccountOutput = CustomerAccountOutput(customerId, forename, surname, accounts, numberAccounts, totalBalance, averageBalance)
-
-    // Assert fields of CustomerAccountOutput
-    assert(customerAccountOutput.customerId === customerId)
-    assert(customerAccountOutput.forename === forename)
-    assert(customerAccountOutput.surname === surname)
-    assert(customerAccountOutput.accounts === accounts)
-    assert(customerAccountOutput.numberAccounts === numberAccounts)
-    assert(customerAccountOutput.totalBalance === totalBalance)
-    assert(customerAccountOutput.averageBalance === averageBalance)
+  // Other Tests
+  test("Test Schemas Object") {
+    assert(Schemas.isInstanceOf[Schemas.type])
   }
 }
