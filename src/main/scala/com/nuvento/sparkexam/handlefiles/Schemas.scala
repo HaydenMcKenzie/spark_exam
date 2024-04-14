@@ -15,7 +15,7 @@ object Schemas {
   case class CustomerAccountOutput(customerId: String,
                                    forename: String,
                                    surname: String,
-                                   accounts: Seq[RawAccountData],
+                                   accounts: Seq[AccountData],
                                    numberAccounts: Integer,
                                    totalBalance: Long,
                                    averageBalance: Double)
@@ -40,12 +40,20 @@ object Schemas {
                          city: Option[String],
                          country: Option[String])
 
+  case class Adddress(addressId: String,
+                         customerId: String,
+                         address: String,
+                         number: Option[Int],
+                         road: Option[String],
+                         city: Option[String],
+                         country: Option[String])
+
   // Question Two Final Schema
   case class CustomerDocument(
                                customerId: String,
                               forename: String,
                               surname: String,
                               accounts: Seq[AccountData],
-                              address: Seq[AddressData])
+                              address: Seq[Adddress])
 
 }

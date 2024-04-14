@@ -20,8 +20,8 @@ object TransformData {
     |
     | Left join customerData and accountData via customerId
     | Groups by "customerId", "forename", "surname"
-    | Collects all account information and puts them into a Seq[RawAccountData]. Renames column to accounts
-    | Counts elements in Seq[RawAccountData]. Renames column to numberAccounts
+    | Collects all account information and puts them into a Seq[AccountData]. Renames column to accounts
+    | Counts elements in Seq[AccountData]. Renames column to numberAccounts
     | Adds all accounts balances to 2 decimal places. Renames column to totalBalance
     | Averages all accounts balances to 2 decimal places. Renames column to averageBalance
     |""".stripMargin

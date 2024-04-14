@@ -2,7 +2,7 @@ package com.nuvento.sparkexam
 
 import com.nuvento.sparkexam.handledata.TransformData.aggregatedDataSet
 import com.nuvento.sparkexam.utils.WriteToFile.writeToFile
-import com.nuvento.sparkexam.SetUp.{accountData, customerData, parquetFilePath}
+import com.nuvento.sparkexam.SetUp.{accountData, customerData}
 import com.nuvento.sparkexam.handlefiles.Schemas.CustomerAccountOutput
 import org.apache.spark.sql.{Dataset,Encoders}
 import com.nuvento.sparkexam.handlefiles.Schemas._
@@ -22,7 +22,7 @@ object QuestionOne {
       |
       | @function aggregated:
       | Joins customerData and accountData via customerId. This is by a left join
-      | It then created accounts, totalBalance and averageBalance
+      | It then creates accounts, totalBalance and averageBalance columns
       |
       | @return Dataset[CustomerAccountOutput]: a new Dataset with the schema of CustomerAccountOutput
       |""".stripMargin
@@ -37,8 +37,16 @@ object QuestionOne {
     """
       | answer Program for Question One
       |
+      | @param outputPath: output pathway for writeToFile to send output file
+      |
+      | @function answer:
+      | Pass questionOne with customerData and accountData
+      | Show answer
+      | Write to parquet file
+      |
       | @return Dataset[CustomerAccountOutput]: a new Dataset with the schema of CustomerAccountOutput and writes it to file
       |""".stripMargin
+
     val answer: Dataset[CustomerAccountOutput] = questionOne(customerData, accountData)
     answer.show(false)
 

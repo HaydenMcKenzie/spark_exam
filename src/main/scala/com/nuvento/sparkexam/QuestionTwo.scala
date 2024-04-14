@@ -1,6 +1,6 @@
 package com.nuvento.sparkexam
 
-import com.nuvento.sparkexam.SetUp.{addressData, parquetFilePath}
+import com.nuvento.sparkexam.SetUp.addressData
 import com.nuvento.sparkexam.handledata.Parsing.{createCustomerDocument, parseAddress}
 import com.nuvento.sparkexam.handlefiles.ReadData.readParquetFile
 import com.nuvento.sparkexam.handlefiles.Schemas.{CustomerAccountOutput, CustomerDocument, RawAddressData}

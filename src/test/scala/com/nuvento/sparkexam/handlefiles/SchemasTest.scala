@@ -34,7 +34,7 @@ class SchemasTest extends AnyFunSuite {
     val customerId = "IND0113"
     val forename = "Leonard"
     val surname = "Ball"
-    val accounts = Seq(RawAccountData("IND0113", "ACC0577", 531))
+    val accounts = Seq(AccountData("IND0113", "ACC0577", 531))
     val numberAccounts = 1
     val totalBalance = 531L
     val averageBalance = 531.0
@@ -77,11 +77,22 @@ class SchemasTest extends AnyFunSuite {
     assert(address.country.contains("Country"))
   }
 
+  test("Test Adddress") {
+    val address = Adddress("1", "1", "123 Main St", Some(10), Some("Main St"), Some("City"), Some("Country"))
+    assert(address.addressId == "1")
+    assert(address.customerId == "1")
+    assert(address.address == "123 Main St")
+    assert(address.number.contains(10))
+    assert(address.road.contains("Main St"))
+    assert(address.city.contains("City"))
+    assert(address.country.contains("Country"))
+  }
+
   test("Test CustomerDocument") {
     import com.nuvento.sparkexam.utils.SparkSetup.spark.implicits._
 
-    val data1: Dataset[AddressData] = Seq(AddressData("1", "1", "123 Main St", Some(10), Some("Main St"), Some("City"), Some("Country"))).toDS()
-    val addressDataSeq: Dataset[AddressData] = parseAddress(data1, "address")
+    val data1: Dataset[Adddress] = Seq(Adddress("1", "1", "123 Main St", Some(10), Some("Main St"), Some("City"), Some("Country"))).toDS()
+    val addressDataSeq: Dataset[Adddress] = parseAddress(data1, "address").as[Adddress]
 
     val accountIds: Seq[AccountData] = Seq(
       AccountData("1", "ACC001", 0),

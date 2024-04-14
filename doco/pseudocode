@@ -1,4 +1,4 @@
-Setup
+Setup.scala
     SET logger error
     CREATE SparkSession
 
@@ -11,37 +11,57 @@ Setup
             from address_data.csv
 
 
-Transform Data - Question 1
-    JOIN accountData to customerData by "customerId"
+QuestionOne.scala
+    FUNCTION questionOne
+        JOIN accountData to customerData by "customerId"
 
-    GROUPBY "customerId", "forename", "surname"
-        CREATE Seq of all accountsId with the same "customerId", "forename", "surname".
-            ALIAS column "accounts"
-        COUNT elements in Seq of "accountId".
-            ALIAS column "numberAccounts"
-        ADD all numbers from "balance" and round to 2 decimal places.
-            ALIAS column "totalBalance"
-        AVERAGE all numbers from "balance" and round to 2 decimal places.
-            ALIAS column "averageBalance"
+        GROUPBY "customerId", "forename", "surname"
+            CREATE Seq of all accountsId with the same "customerId", "forename", "surname".
+                ALIAS column "accounts"
+            COUNT elements in Seq of "accountId".
+                ALIAS column "numberAccounts"
+            ADD all numbers from "balance" and round to 2 decimal places.
+                ALIAS column "totalBalance"
+            AVERAGE all numbers from "balance" and round to 2 decimal places.
+                ALIAS column "averageBalance"
+        RETURN as Dataset[CustomerAccountOutput]
 
-    WRITE TO FILE
-        Save as a Parquet file
-        SHOW new Dataset
+    FUNCTION answer
+        CALL questionOne as answer: Dataset[CustomerAccountOutput]
+        SHOW answer
+        WRITE TO FILE
+            Save as a Parquet file
+        RETURN answer
+
+    FUNCTION main
+    CALL answer with "output" input
 
 
+QuestionTwo.scala
+    FUNCTION questionTwo
+        JOIN parquetData and parsedData via "customerId" column
+        CREATE a new Dataset
+            SELECT "customerId"
+            SELECT "forename"
+            SELECT "surname"
+            SELECT "accounts"
+            SELECT addressId","customerId","address","number","road","city" and "country"
+                Put into an Array
+                ALIAS "address"
 
-Transform Data - Question 2
-    READ Parguet file
-        from Question 1
-    PARSE "address" column in addressData
-        from SetUp.scala
+    FUNCTION answer
+        TRY
+            READ Parquet file
+                from Question 1
+            PARSE "address" column from addressData
+                SEPARATE into "number","street","city","country"
 
-    JOIN addressData to Parguet file via "customerId" column
-    CREATE customer document
-        SELECT addressId, customerId, address, number, road, city, country. Make them a struct
-        GROUPBY customerId, forename, surname, accounts
-        CREATE new column called "address"
-        SELECT customerId, forename, surname, accounts, address.
-            Put it in the AddressData schema
+            CALL questionTwo as answer: Dataset[CustomerDocument]
 
-    SHOW new Dataset
+            SHOW answer
+            RETURN answer
+        CATCH
+            Exception error
+
+    FUNCTION main
+        CALL answer with "output", addressData and "address" inputs

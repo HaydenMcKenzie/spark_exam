@@ -12,6 +12,4 @@ object SetUp extends App {
   lazy val customerData = readFileData[Schemas.RawCustomerData]("customer_data")
   lazy val accountData = readFileData[Schemas.RawAccountData]("account_data")
   lazy val addressData = readFileData[Schemas.RawAddressData]("address_data")
-
-  val parquetFilePath = "output"// remove
 }
