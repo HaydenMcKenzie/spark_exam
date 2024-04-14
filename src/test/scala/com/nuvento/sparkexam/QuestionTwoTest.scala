@@ -133,25 +133,17 @@ class QuestionTwoTest extends AnyFunSuite with BeforeAndAfter  {
     assert(exception.getMessage.contains("Path does not exist") || exception.getMessage.contains("Error occurred"))
   }
 
+  test("main method should execute without errors") {
+    try {
+      val outputStream = new java.io.ByteArrayOutputStream()
+      Console.withOut(outputStream) {
+        QuestionTwo.main(Array.empty[String])
+      }
 
-  test("main method should behave as expected") {
-    import java.io.{ByteArrayOutputStream, PrintStream}
-
-    val outputStream = new ByteArrayOutputStream()
-    val printStream = new PrintStream(outputStream)
-    val originalOut = System.out
-    System.setOut(printStream)
-
-    // Call the main method
-    QuestionTwo.main(Array.empty[String])
-
-    // Restore the original System.out
-    System.setOut(originalOut)
-
-    // Get the captured output
-    val capturedOutput = outputStream.toString
-
-    // Assert on the behavior of the output, such as its content or structure
-    assert(capturedOutput != null)
+      assert(true)
+    } catch {
+      case e: Throwable =>
+        fail(s"Exception occurred: ${e.getMessage}")
+    }
   }
 }
