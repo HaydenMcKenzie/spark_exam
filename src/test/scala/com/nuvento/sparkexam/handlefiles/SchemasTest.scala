@@ -23,7 +23,7 @@ class SchemasTest extends AnyFunSuite {
   }
 
   test("Test RawAccountData") {
-    val account = RawAccountData("1", "ACC001", 100.0)
+    val account = RawAccountData("1", "ACC001", 100)
     assert(account.customerId == "1")
     assert(account.accountId == "ACC001")
     assert(account.balance == 100.0)
@@ -59,7 +59,7 @@ class SchemasTest extends AnyFunSuite {
   }
 
   test("Test AccountData") {
-    val account = AccountData("1", "ACC001", 100.0)
+    val account = AccountData("1", "ACC001", 100)
     assert(account.customerId == "1")
     assert(account.accountId == "ACC001")
     assert(account.balance == 100.0)
@@ -84,8 +84,8 @@ class SchemasTest extends AnyFunSuite {
     val addressDataSeq: Dataset[AddressData] = parseAddress(data1, "address")
 
     val accountIds: Seq[AccountData] = Seq(
-      AccountData("1", "ACC001", 0.0),
-      AccountData("1", "ACC002", 0.0)
+      AccountData("1", "ACC001", 0),
+      AccountData("1", "ACC002", 0)
     )
 
     val document = Schemas.CustomerDocument("1", "Alice", "Smith", accountIds, addressDataSeq.collect())

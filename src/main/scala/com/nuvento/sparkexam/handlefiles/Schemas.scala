@@ -9,7 +9,7 @@ object Schemas {
 
   case class RawAccountData(customerId: String,
                             accountId: String,
-                            balance: Double)
+                            balance: Integer)
 
   // Question One Final Schema
   case class CustomerAccountOutput(customerId: String,
@@ -30,7 +30,7 @@ object Schemas {
   // Extra
   case class AccountData(customerId: String,
                          accountId: String,
-                         balance: Double)
+                         balance: Integer)
 
   case class AddressData(addressId: String,
                          customerId: String,
