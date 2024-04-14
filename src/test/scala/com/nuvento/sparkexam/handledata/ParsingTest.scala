@@ -1,22 +1,42 @@
 package com.nuvento.sparkexam.handledata
 
 // Nuvento Imports
+import com.nuvento.sparkexam.QuestionOne.answer
 import com.nuvento.sparkexam.SetUp
-import com.nuvento.sparkexam.SetUp.parquetFilePath
 import com.nuvento.sparkexam.handledata.Parsing.{createCustomerDocument, parseAddress}
 import com.nuvento.sparkexam.handlefiles.ReadData.{readFileData, readParquetFile}
 import com.nuvento.sparkexam.handlefiles.Schemas
 import com.nuvento.sparkexam.utils.SparkSetup
+import com.nuvento.sparkexam.utils.WriteToFile.writeToFile
+
+// Java Imports
+import java.io.File
 
 // Apache Imports
 import org.apache.spark.sql.types.{ArrayType, IntegerType, StringType, StructField, StructType}
+import org.apache.commons.io.FileUtils
 
 // ScalaTest Imports
 import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.BeforeAndAfter
 
-class ParsingTest extends AnyFunSuite {
+
+class ParsingTest extends AnyFunSuite with BeforeAndAfter {
   SetUp.main(Array.empty[String])
   import SparkSetup.spark.implicits._
+
+  val outputFilePath = "src/test/scala/com/nuvento/sparkexam/testoutput"
+
+  before {
+    // Create testoutput file with test data
+    val testData = answer(outputFilePath)
+    writeToFile(testData, outputFilePath)
+  }
+
+  after {
+    // Delete testoutput directory and its contents
+    FileUtils.deleteDirectory(new File("src/test/scala/com/nuvento/sparkexam/testoutput"))
+  }
 
   test("Testing parseAddress") {
     // Import
@@ -46,7 +66,7 @@ class ParsingTest extends AnyFunSuite {
     // Import
     val importAddressData = SetUp.addressData
 
-    val parquetFile = readParquetFile(parquetFilePath)
+    val parquetFile = readParquetFile(outputFilePath)
     val parsedData = parseAddress(importAddressData, "address")
     val joinData = parquetFile.join(parsedData, "customerId")
     val processData = createCustomerDocument(joinData)

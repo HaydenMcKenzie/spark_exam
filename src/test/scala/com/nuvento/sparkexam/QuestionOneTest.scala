@@ -3,7 +3,7 @@ package com.nuvento.sparkexam
 // Nuvento Imports
 import com.nuvento.sparkexam.QuestionOne._
 import com.nuvento.sparkexam.SetUp.{accountData, customerData}
-import com.nuvento.sparkexam.handlefiles.Schemas.{CustomerAccountOutput, CustomerDocument}
+import com.nuvento.sparkexam.handlefiles.Schemas.CustomerAccountOutput
 import com.nuvento.sparkexam.utils.WriteToFile.writeToFile
 
 // Apache Imports

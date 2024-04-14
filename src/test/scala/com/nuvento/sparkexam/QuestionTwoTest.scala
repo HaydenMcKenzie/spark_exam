@@ -2,7 +2,7 @@ package com.nuvento.sparkexam
 
 // Nuvento Imports
 import com.nuvento.sparkexam.QuestionOne.answer
-import com.nuvento.sparkexam.SetUp.{addressData, parquetFilePath}
+import com.nuvento.sparkexam.SetUp.addressData
 import com.nuvento.sparkexam.handledata.Parsing.parseAddress
 import com.nuvento.sparkexam.handlefiles.ReadData.readParquetFile
 import com.nuvento.sparkexam.handlefiles.Schemas.{CustomerDocument, RawAddressData}
@@ -27,22 +27,26 @@ class QuestionTwoTest extends AnyFunSuite with BeforeAndAfter  {
   import SparkSetup.spark.implicits._
 
   val outputFilePath = "src/test/scala/com/nuvento/sparkexam/testoutput"
+  val outputPath = "output"
   val addressString = "address"
 
   before {
     // Create testoutput file with test data
     val testData = answer(outputFilePath)
+    val outputFile = answer("output")
     writeToFile(testData, outputFilePath)
+    writeToFile(outputFile, outputPath)
   }
 
   after {
     // Delete testoutput directory and its contents
-    FileUtils.deleteDirectory(new File("src/test/scala/com/nuvento/sparkexam/testoutput"))
+    FileUtils.deleteDirectory(new File(outputFilePath))
+    FileUtils.deleteDirectory(new File(outputPath))
   }
 
 
   test("Testing questionTwo Schema") {
-    val testParguetFile = readParquetFile(parquetFilePath)
+    val testParguetFile = readParquetFile("src/test/scala/com/nuvento/sparkexam/testoutput")
     val testParsedData = parseAddress(addressData, "address")
     val testMainProgram = QuestionTwo.questionTwo(testParguetFile, testParsedData)
 
