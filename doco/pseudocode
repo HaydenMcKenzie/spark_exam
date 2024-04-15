@@ -45,7 +45,7 @@ QuestionTwo.scala
             SELECT "forename"
             SELECT "surname"
             SELECT "accounts"
-            SELECT addressId","customerId","address","number","road","city" and "country"
+            SELECT "addressId","customerId","address","number","road","city" and "country"
                 Put into an Array
                 ALIAS "address"
 

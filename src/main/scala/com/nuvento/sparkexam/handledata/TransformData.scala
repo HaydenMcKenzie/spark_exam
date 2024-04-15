@@ -31,7 +31,6 @@ object TransformData {
 
     joinDataByCustomerId.groupBy("customerId", "forename", "surname")
       .agg(
-        // Conditionally collect list based on whether there are accounts with accountId and balance
         collect_list(
           when(col("accountId").isNull && col("balance").isNull, lit(null))
             .otherwise(struct("customerId", "accountId", "balance"))

@@ -15,8 +15,6 @@ object QuestionOne {
 
   def questionOne(customerData: Dataset[RawCustomerData], accountData: Dataset[RawAccountData]): Dataset[CustomerAccountOutput] = {
     """
-      | Main Program for Question One
-      |
       | @param customerData: A Dataset from customer_data.csv with the schema of RawCustomerSchema
       | @param accountData: A Dataset from account_data.csv with the schema of RawAccountSchema
       |

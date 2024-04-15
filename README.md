@@ -11,21 +11,32 @@ First navigate to [src/main/scala/com/nuvento/sparkexam](https://github.com/Hayd
 
 
 - Before QuestionOne and QuestionTwo are run:
-  - Reads customer_data.csv into Spark
-  - Reads account_data.csv into Spark
-  - Reads address_data.csv into Spark
+  - Reads customer_data.csv into Spark via `customerData` and Schema `RawCustomerData(customerId: String,forename: String,surname: String)`
+  - Reads account_data.csv into Spark via `accountData` and Schema `RawAccountData(customerId: String, accountId: String, balance: Integer)`
+  - Reads address_data.csv into Spark via `addressData` and Schema `RawAddressData(addressId: String, customerId: String, address: String)`
+  
+
 - When the QuestionOne is run:
-  - Transfroms it to the requirements of exam
+  - Joins `customerData` and `accountData` with a left join on `"customerId"` column
+  - GroupBy `"customerId", "forename", "surname"`
+  - Collect List and Struct `"customerId, "accountId", "balance"` and alias as `"accounts"`
+  - Count `"accountIds"` and alias as "`numberAccounts`"
+  - Add up all `"balance"` and alias as `"totalBalance"`
+  - Round `"balance"` to 2 decimal places and alias as `"averageBalance"`
+  - Pass new aggregated data into a `Dataset[CustomerAccoutOutput] `
   - It will create an "output" folder in the sparkexam folder which contains the parquet file needed for question two
   - Prints the Dataset
-- When the QuestionTwo is run:
-  - Reads parguet File from question one
-  - Parses the address column
-  - Joins the parguet file and parsed address dataset
-  - Select columns using the CustomerDocument Schema
-  - Prints the Dataset
 
-**NOTE: THE PARGUET FILE IN OUTPUT FOLDER HAS NOT BEEN PUSHED TO GIT. YOU WILL NEED TO RUN QUESTION 1 BEFORE RUNNING QUESTION 2**
+
+- When the QuestionTwo is run:
+  - Reads parquet File from question one via `parquetFile`
+  - Parses the address column from addressData into `"number", "road", "city", "country"` via `parsedData`
+  - Joins the `parquetFile` and `parsedData` 
+  - Selects `"customerId", "forename", "surname", "accounts"` and array `struct("addressId", "customerId", "address", "number", "road", "city", "country")` and alias as `"address"`
+  - Puts new aggregated data into a `Dataset[CustomerDocument]`
+  - Show the Dataset
+
+**NOTE: THE PARQUET FILE IN OUTPUT FOLDER HAS NOT BEEN PUSHED TO GIT. YOU WILL NEED TO RUN QUESTION ONE BEFORE RUNNING QUESTION TWO**
 
 
 ## Environmental 
@@ -33,7 +44,4 @@ First navigate to [src/main/scala/com/nuvento/sparkexam](https://github.com/Hayd
 - Compiler: Scalac - 3.3.1
 - Unit Test: AnyFunSuite - version: 3.2.15
 - SDK: 11.0.12
-- Archetype: build.sbt 
-
-## Other
-There is a [practice folder](https://github.com/HaydenMcKenzie/exam_spark/tree/master/src/main/scala/com/nuvento/practice) which I have which I used to build my logic and play with certain functions
+- Archetype: build.sbt
