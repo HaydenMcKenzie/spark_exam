@@ -5,6 +5,7 @@ import org.apache.log4j._
 import org.apache.spark.sql.SparkSession
 
 
+
 object SparkSetup extends App {
   """
     | Logger is set to Level.ERROR to reduce error texts at compilation
